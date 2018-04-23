@@ -74,12 +74,12 @@ public class CurlActivity extends Activity {
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDy_ZvkpUn8qyJuYXCai88AYF4P5-glPquXyjhwowHffqKtVhkiQ",
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUAlc0pdzthsqzLbG9mhDKXEYkutKPehMZlAgYcsSScFkAqj4-",
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNRFtYWvXfhButlyLbmRu_9XCea0P1aDxOesxykmkDbMhDeiZx",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_xW6BPnyIKNoOrB15uTjjtE34BOjNJOdIOA7VsYWne37BuEmQCw",};
+             git     "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg"};
 
         bit=new Bitmap[mBitmapIds.length];
 
         for(int i=0;i<mBitmapIds.length;i++)
-         {
+         {git
              try {
                  new drawableFromUrl().execute(mBitmapIds[i],String.valueOf(i));
              }catch (Exception e)
@@ -192,10 +192,12 @@ public MyProvider(){
             //Drawable d = getResources().getDrawable(mBitmapIds[index]);
 
             Log.e("Data",imgUrls.size()+"");
+            Log.e("Resolution","w: "+width+" h: "+height);
+
             Drawable d=new BitmapDrawable(getResources(),bit[index]);
             int margin = 5;
-            int border = 10;
-            Rect r = new Rect(margin, margin, 1000, 1000);
+            int border = 0;
+            Rect r = new Rect(margin, margin, width-margin, height-margin);
 
             int imageWidth = r.width() - (border * 2);
             int imageHeight = imageWidth * d.getIntrinsicHeight()
@@ -206,18 +208,24 @@ public MyProvider(){
                         / d.getIntrinsicHeight();
             }
 
-            r.left += ((r.width() - imageWidth) / 2) - border;
+           /* r.left += ((r.width() - imageWidth) / 2) - border;
             r.right = r.left + imageWidth + border + border;
             r.top += ((r.height() - imageHeight) / 2) - border;
             r.bottom = r.top + imageHeight + border + border;
+*/
+
+            r.left +=10;
+            r.right += -10;
+            r.top += 10;
+            r.bottom += -10;
 
             Paint p = new Paint();
             p.setColor(0xFFC0C0C0);
             c.drawRect(r, p);
             r.left += border;
-            r.right -= border;
+            r.right += border;
             r.top += border;
-            r.bottom -= border;
+            r.bottom += border;
 
             d.setBounds(r);
             d.draw(c);
