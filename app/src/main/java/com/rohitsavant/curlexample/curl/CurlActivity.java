@@ -74,12 +74,12 @@ public class CurlActivity extends Activity {
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDy_ZvkpUn8qyJuYXCai88AYF4P5-glPquXyjhwowHffqKtVhkiQ",
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUAlc0pdzthsqzLbG9mhDKXEYkutKPehMZlAgYcsSScFkAqj4-",
                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNRFtYWvXfhButlyLbmRu_9XCea0P1aDxOesxykmkDbMhDeiZx",
-             git     "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg"};
+                  "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg"};
 
         bit=new Bitmap[mBitmapIds.length];
 
         for(int i=0;i<mBitmapIds.length;i++)
-         {git
+         {
              try {
                  new drawableFromUrl().execute(mBitmapIds[i],String.valueOf(i));
              }catch (Exception e)
