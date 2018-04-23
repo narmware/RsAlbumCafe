@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.rohitsavant.curlexample.activity.AlbumDetailedActivity">
+
+       <RelativeLayout
+           android:id="@+id/header"
+           android:layout_alignParentTop="true"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+           <include layout="@layout/custom_toolbar"></include>
+
+       </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_below="@id/header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:background="@drawable/back"
+                android:alpha="0.30"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <ImageView
+                android:id="@+id/album_image"
+                android:elevation="10dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_weight="1.6"
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/img_album_logo"
+                android:text="LOGO"
+                android:gravity="center"
+                android:fontFamily="casual"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/purple_700"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/horizontal"
+                android:layout_below="@id/img_album_logo"
+                android:layout_width="match_parent"
+                android:background="@android:color/black"
+                android:layout_height="1dp"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Photography"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="Rohit Savant \n Star Videos , \n Pune"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="8805250944"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        </ScrollView>
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+</RelativeLayout>
