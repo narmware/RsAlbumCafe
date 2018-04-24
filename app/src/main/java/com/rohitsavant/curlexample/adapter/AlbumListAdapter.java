@@ -2,12 +2,15 @@ package com.rohitsavant.curlexample.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +18,13 @@ import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.activity.AlbumDetailedActivity;
 import com.rohitsavant.curlexample.curl.CurlActivity;
 import com.rohitsavant.curlexample.helper.Constants;
+import com.rohitsavant.curlexample.helper.SharedPreferencesHelper;
 import com.rohitsavant.curlexample.pojo.AlbumList;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 /**
@@ -27,21 +33,24 @@ import java.util.List;
 
 public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyViewHolder> {
 
-     List<AlbumList> photos;
-    Context mContext;
+     static List<AlbumList> photos;
+    static Context mContext;
+
 
     /* FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 */
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView mthumb_title;
-       ImageView mImgFrame;
+        ImageView mImgFrame;
+        public ImageButton mBtnClose;
         AlbumList mItem;
-        LinearLayout mLinearItem;
+        CoordinatorLayout mLinearItem;
         String videoId;
 
         public MyViewHolder(View view) {
             super(view);
+            mBtnClose=view.findViewById(R.id.btn_close);
             mthumb_title= view.findViewById(R.id.thumb_title);
             mImgFrame=view.findViewById(R.id.thumb_img);
             mLinearItem=view.findViewById(R.id.linear_item);
@@ -61,6 +70,47 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
 
 
                     }
+            });
+
+            mBtnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final int position= (int) mLinearItem.getTag();
+
+                    new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("Remove this album")
+                            .setConfirmText("Yes")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+
+                                    photos.remove(position);
+                                    notifyDataSetChanged();
+
+                                    sDialog
+                                            .setTitleText("Deleted!")
+                                              .setContentText("Your album has been removed!")
+                                            .setConfirmText("OK")
+                                            .showCancelButton(false)
+                                            .setConfirmClickListener(null)
+                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                    //sDialog.dismiss();
+                                }
+                            })
+                            .showCancelButton(true)
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+
+                                    sDialog.dismissWithAnimation();
+                                }
+                            })
+
+                            .show();
+
+                }
             });
 
         }
@@ -103,6 +153,14 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                     .into(holder.mImgFrame);
 
         }*/
+
+      if(SharedPreferencesHelper.getDeleteFlag(mContext)==false)
+      {
+          holder.mBtnClose.setVisibility(View.INVISIBLE);
+      }
+      else {
+          holder.mBtnClose.setVisibility(View.VISIBLE);
+      }
         holder.mLinearItem.setTag(position);
         Picasso.with(mContext)
                 .load(photo.getUrl())

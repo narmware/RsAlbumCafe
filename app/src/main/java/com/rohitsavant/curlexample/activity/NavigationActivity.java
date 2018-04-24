@@ -1,6 +1,7 @@
 package com.rohitsavant.curlexample.activity;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.adapter.AlbumListAdapter;
+import com.rohitsavant.curlexample.helper.SharedPreferencesHelper;
 import com.rohitsavant.curlexample.pojo.AlbumList;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.recycler) RecyclerView mRecyclerView;
     @BindView(R.id.btn_nav) ImageButton mBtnNav;
+    @BindView(R.id.btn_delete) ImageButton mBtnDelete;
 
     AlbumListAdapter mAdapter;
     RequestQueue mVolleyRequest;
@@ -49,6 +52,7 @@ public class NavigationActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+        SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,6 +71,22 @@ public class NavigationActivity extends AppCompatActivity
                 drawer.openDrawer(GravityCompat.START);
             }
         });
+
+        mBtnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(NavigationActivity.this, "Delete", Toast.LENGTH_SHORT).show();
+
+                if(SharedPreferencesHelper.getDeleteFlag(NavigationActivity.this)==false)
+                {
+                    SharedPreferencesHelper.setDeleteFalg(true,NavigationActivity.this);
+                }
+                else {
+                    SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void init() {
@@ -82,8 +102,12 @@ public class NavigationActivity extends AppCompatActivity
     public void setAlbumAdapter(RecyclerView.LayoutManager mLayoutManager){
         SnapHelper snapHelper = new LinearSnapHelper();
 
+        mAlbumList.clear();
+        mAlbumList.add(new AlbumList("https://mccainphotography.files.wordpress.com/2012/11/mccainpictures071.jpg","My Wedding"));
+        mAlbumList.add(new AlbumList("http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg","My Birthday"));
+        mAlbumList.add(new AlbumList("https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg","My Wedding"));
         mAlbumList.add(new AlbumList("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_xW6BPnyIKNoOrB15uTjjtE34BOjNJOdIOA7VsYWne37BuEmQCw","My Wedding"));
-        mAlbumList.add(new AlbumList("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDy_ZvkpUn8qyJuYXCai88AYF4P5-glPquXyjhwowHffqKtVhkiQ","My Birthday"));
+        mAlbumList.add(new AlbumList("http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg","My Wedding"));
 
         mAdapter = new AlbumListAdapter(NavigationActivity.this,mAlbumList);
         //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(GalleryActivity.this,2);

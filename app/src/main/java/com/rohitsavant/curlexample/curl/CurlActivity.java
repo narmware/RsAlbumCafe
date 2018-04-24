@@ -41,6 +41,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Simple Activity for curl testing.
  *
@@ -53,11 +55,18 @@ public class CurlActivity extends Activity {
     ArrayList<Bitmap> imgUrls=new ArrayList<>();
     Bitmap[] bit;
     String[] mBitmapIds;
+    SweetAlertDialog sweetAlertDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        sweetAlertDialog=new SweetAlertDialog(CurlActivity.this, SweetAlertDialog.PROGRESS_TYPE)
+                .setTitleText("Loading...")
+
+        ;
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
 
        /* try {
             MediaPlayer mp =new MediaPlayer();
@@ -69,11 +78,11 @@ public class CurlActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-         mBitmapIds = new String[]{"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNRFtYWvXfhButlyLbmRu_9XCea0P1aDxOesxykmkDbMhDeiZx",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_xW6BPnyIKNoOrB15uTjjtE34BOjNJOdIOA7VsYWne37BuEmQCw",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDy_ZvkpUn8qyJuYXCai88AYF4P5-glPquXyjhwowHffqKtVhkiQ",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUAlc0pdzthsqzLbG9mhDKXEYkutKPehMZlAgYcsSScFkAqj4-",
-                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNRFtYWvXfhButlyLbmRu_9XCea0P1aDxOesxykmkDbMhDeiZx",
+         mBitmapIds = new String[]{"https://mccainphotography.files.wordpress.com/2012/11/mccainpictures071.jpg",
+                 "https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg",
+                 "https://i.ytimg.com/vi/xsjGKpsDjgU/maxresdefault.jpg",
+                 "http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg",
+                 "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
                   "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg"};
 
         bit=new Bitmap[mBitmapIds.length];
@@ -95,7 +104,7 @@ public class CurlActivity extends Activity {
         mCurlView = (CurlView) findViewById(R.id.curl);
         mCurlView.setCurrentIndex(index);
         mCurlView.setSizeChangedObserver(new SizeChangedObserver());
-        mCurlView.setBackgroundColor(0x191919);
+        mCurlView.setBackgroundColor(getResources().getColor(R.color.red_500));
 
         // This is something somewhat experimental. Before uncommenting next
         // line, please see method comments in CurlView.
@@ -280,6 +289,9 @@ public MyProvider(){
                 if(pos==mBitmapIds.length-1)
                 {
                     mCurlView.setBitmapProvider(new MyProvider());
+
+                    try{
+                    sweetAlertDialog.dismissWithAnimation();}catch (Exception e){}
                 }
 
 

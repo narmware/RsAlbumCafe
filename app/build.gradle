@@ -3,11 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.rohitsavant.curlexample"
+        applicationId "com.narmware.rscafe"
         minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -39,4 +39,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     compile 'com.jakewharton:butterknife:8.7.0'
     compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.github.f0ris.sweetalert:library:1.5.1'
+
 }
