@@ -85,6 +85,7 @@
 
                 <TextView
                     android:text="Photography"
+                    android:textColor="@color/textColor"
                     android:padding="5dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
@@ -92,6 +93,7 @@
 
                 <TextView
                     android:text="Rohit Savant \n Star Videos , \n Pune"
+                    android:textColor="@color/textColor"
                     android:gravity="center"
                     android:padding="5dp"
                     android:layout_width="match_parent"
@@ -99,6 +101,7 @@
 
                 <TextView
                     android:text="8805250944"
+                    android:textColor="@color/textColor"
                     android:padding="5dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
