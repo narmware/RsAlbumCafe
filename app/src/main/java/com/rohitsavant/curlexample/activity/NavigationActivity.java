@@ -1,6 +1,7 @@
 package com.rohitsavant.curlexample.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -42,11 +46,14 @@ public class NavigationActivity extends AppCompatActivity
     @BindView(R.id.recycler) RecyclerView mRecyclerView;
     @BindView(R.id.btn_nav) ImageButton mBtnNav;
     @BindView(R.id.btn_delete) ImageButton mBtnDelete;
+    @BindView(R.id.btn_submit) Button mBtnSubmit;
+    @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
 
     AlbumListAdapter mAdapter;
     RequestQueue mVolleyRequest;
     ArrayList<AlbumList> mAlbumList=new ArrayList<>();
     boolean doubleBackToExitPressedOnce = false;
+    String mAlbumId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,25 @@ public class NavigationActivity extends AppCompatActivity
                     SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
                 }
                 mAdapter.notifyDataSetChanged();
+            }
+        });
+
+        mBtnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAlbumId=mEdtAlbumId.getText().toString().trim();
+
+                if(mAlbumId.equals(""))
+                {
+                    mEdtAlbumId.setError("Please enter album id");
+                }
+                else {
+                    Toast.makeText(NavigationActivity.this, "Album added successfully", Toast.LENGTH_SHORT).show();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    mAlbumList.add(new AlbumList("http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg","My Wedding"));
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         });
     }

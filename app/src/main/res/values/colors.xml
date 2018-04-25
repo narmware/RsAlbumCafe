@@ -7,7 +7,7 @@
     <color name="photoBackground">#f9d0dd</color>
 -->
 
-    <color name="photoBackground">@color/red_500</color>
+    <color name="photoBackground">@color/pink_50</color>
     <color name="textColor">@color/grey_800</color>
 
 </resources>

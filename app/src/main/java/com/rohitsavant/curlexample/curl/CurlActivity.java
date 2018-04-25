@@ -32,6 +32,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.rohitsavant.curlexample.R;
 
@@ -56,6 +60,9 @@ public class CurlActivity extends Activity {
     Bitmap[] bit;
     String[] mBitmapIds;
     SweetAlertDialog sweetAlertDialog;
+    TextView mBtnGrid;
+    LinearLayout mLinearBack;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +120,25 @@ public class CurlActivity extends Activity {
 
         // CAGS: This is to allow 2 pages landscape mode, set to false for legacy mode
         mCurlView.set2PagesLandscape(true);
+
+        mBtnGrid=findViewById(R.id.btn_grid);
+        //mBtnGrid.setVisibility(View.VISIBLE);
+        mBtnGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurlView.setCurrentIndex(4);
+            }
+        });
+
+
+        mLinearBack=findViewById(R.id.linear_back);
+        mLinearBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     @Override
@@ -258,7 +284,7 @@ public MyProvider(){
             if (w > h) {
                 mCurlView.setViewMode(CurlView.SHOW_TWO_PAGES);
                // mCurlView.setMargins(.1f, .05f, .1f, .05f);
-                mCurlView.setMargins(0,.10f,0,.10f);
+                mCurlView.setMargins(0,.20f,0,.20f);
             } else {
                 mCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
                // mCurlView.setMargins(.1f, .1f, .1f, .1f);

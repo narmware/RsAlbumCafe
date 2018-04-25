@@ -102,6 +102,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             <EditText
+                android:id="@+id/edt_alb_id"
+                android:inputType="text"
                 android:hint="Enter Album id"
                 android:padding="10dp"
                 android:textColor="@color/textColor"
@@ -116,7 +118,9 @@
                 />
 
             <Button
+                android:id="@+id/btn_submit"
                 android:text="Submit"
+                android:foreground="?attr/selectableItemBackground"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/button_submit"
                 android:textColor="@color/amber_700"
