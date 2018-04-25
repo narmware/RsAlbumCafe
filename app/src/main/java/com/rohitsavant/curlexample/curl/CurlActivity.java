@@ -78,7 +78,7 @@ public class CurlActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-         mBitmapIds = new String[]{"https://mccainphotography.files.wordpress.com/2012/11/mccainpictures071.jpg",
+         mBitmapIds = new String[]{"https://mccainphoto  graphy.files.wordpress.com/2012/11/mccainpictures071.jpg",
                  "https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg",
                  "https://i.ytimg.com/vi/xsjGKpsDjgU/maxresdefault.jpg",
                  "http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg",
