@@ -3,28 +3,55 @@
     android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
-        android:id="@+id/rltv_back"
-        android:layout_width="70dp"
+        android:id="@+id/linear_back"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:minWidth="0dp"
             android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_back"
-            android:layout_height="match_parent" />
+            app:srcCompat="@drawable/ic_arrow_back"
+            android:layout_marginRight="6dp"
+            android:layout_height="wrap_content" />
 
+        <TextView
+            android:textColor="@android:color/white"
+            android:text="Back"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/title"
         android:ellipsize="end"
+        android:textSize="18sp"
+        android:gravity="center"
         android:textColor="@android:color/white"
-        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/linear_back"
+        android:layout_toLeftOf="@id/btn_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/btn_grid"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:text="Grid"
+        android:textColor="@android:color/white"
+        android:background="@android:color/transparent"
+        />
 </RelativeLayout>

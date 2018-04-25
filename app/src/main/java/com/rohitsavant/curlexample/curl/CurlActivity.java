@@ -32,6 +32,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.rohitsavant.curlexample.R;
 
@@ -56,6 +60,9 @@ public class CurlActivity extends Activity {
     Bitmap[] bit;
     String[] mBitmapIds;
     SweetAlertDialog sweetAlertDialog;
+    TextView mBtnGrid;
+    LinearLayout mLinearBack;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +90,8 @@ public class CurlActivity extends Activity {
                  "https://i.ytimg.com/vi/xsjGKpsDjgU/maxresdefault.jpg",
                  "http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg",
                  "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
-                  "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg"};
+                  "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg",
+         };
 
         bit=new Bitmap[mBitmapIds.length];
 
@@ -104,7 +112,7 @@ public class CurlActivity extends Activity {
         mCurlView = (CurlView) findViewById(R.id.curl);
         mCurlView.setCurrentIndex(index);
         mCurlView.setSizeChangedObserver(new SizeChangedObserver());
-        mCurlView.setBackgroundColor(getResources().getColor(R.color.red_500));
+        mCurlView.setBackgroundColor(getResources().getColor(R.color.photoBackground));
 
         // This is something somewhat experimental. Before uncommenting next
         // line, please see method comments in CurlView.
@@ -112,6 +120,25 @@ public class CurlActivity extends Activity {
 
         // CAGS: This is to allow 2 pages landscape mode, set to false for legacy mode
         mCurlView.set2PagesLandscape(true);
+
+        mBtnGrid=findViewById(R.id.btn_grid);
+        //mBtnGrid.setVisibility(View.VISIBLE);
+        mBtnGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurlView.setCurrentIndex(4);
+            }
+        });
+
+
+        mLinearBack=findViewById(R.id.linear_back);
+        mLinearBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     @Override
@@ -204,7 +231,7 @@ public MyProvider(){
             Log.e("Resolution","w: "+width+" h: "+height);
 
             Drawable d=new BitmapDrawable(getResources(),bit[index]);
-            int margin = 5;
+            int margin = 0;
             int border = 0;
             Rect r = new Rect(margin, margin, width-margin, height-margin);
 
@@ -223,13 +250,13 @@ public MyProvider(){
             r.bottom = r.top + imageHeight + border + border;
 */
 
-            r.left +=10;
-            r.right += -10;
-            r.top += 10;
-            r.bottom += -10;
+            r.left +=4;
+            r.right += -4;
+            r.top += 4;
+            r.bottom += -4;
 
             Paint p = new Paint();
-            p.setColor(0xFFC0C0C0);
+            p.setColor(getResources().getColor(R.color.photoBackground));
             c.drawRect(r, p);
             r.left += border;
             r.right += border;
@@ -257,7 +284,7 @@ public MyProvider(){
             if (w > h) {
                 mCurlView.setViewMode(CurlView.SHOW_TWO_PAGES);
                // mCurlView.setMargins(.1f, .05f, .1f, .05f);
-                mCurlView.setMargins(0,0,0,0);
+                mCurlView.setMargins(0,.20f,0,.20f);
             } else {
                 mCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
                // mCurlView.setMargins(.1f, .1f, .1f, .1f);

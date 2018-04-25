@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rohitsavant.curlexample.R;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class AlbumDetailedActivity extends AppCompatActivity {
 
-    @BindView(R.id.btn_back) ImageButton mBtnBack;
+    @BindView(R.id.linear_back) LinearLayout mBtnBack;
     @BindView(R.id.title) TextView mTxtTitle;
     @BindView(R.id.album_image) ImageView mImgAlbum;
 
