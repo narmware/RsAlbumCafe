@@ -9,14 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.activity.AlbumDetailedActivity;
-import com.rohitsavant.curlexample.curl.CurlActivity;
+import com.rohitsavant.curlexample.activity.NavigationActivity;
 import com.rohitsavant.curlexample.helper.Constants;
 import com.rohitsavant.curlexample.helper.SharedPreferencesHelper;
 import com.rohitsavant.curlexample.pojo.AlbumList;
@@ -175,6 +172,14 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
 
     @Override
     public int getItemCount() {
+        if(photos.size()==0)
+        {
+            NavigationActivity.mLinearLeft.setVisibility(View.GONE);
+        }
+        else{
+            NavigationActivity.mLinearLeft.setVisibility(View.VISIBLE);
+
+        }
         return photos.size();
     }
 

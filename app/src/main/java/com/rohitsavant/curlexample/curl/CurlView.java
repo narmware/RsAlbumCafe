@@ -332,6 +332,9 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
             }
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
+                final MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.page_flip);
+                mp.start();
+
                 if (mCurlState == CURL_LEFT || mCurlState == CURL_RIGHT) {
                     // Animation source is the point from where animation starts.
                     // Also it's handled in a way we actually simulate touch events
@@ -571,8 +574,6 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
      * to support 2 pages in landscape
      */
     private void startCurl(int page) {
-        final MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.page_flip);
-        mp.start();
 
         switch (page) {
 

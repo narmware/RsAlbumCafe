@@ -1,25 +1,17 @@
 package com.rohitsavant.curlexample.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -48,7 +41,7 @@ public class NavigationActivity extends AppCompatActivity
     @BindView(R.id.btn_delete) ImageButton mBtnDelete;
     @BindView(R.id.btn_submit) Button mBtnSubmit;
     @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
-
+    public static LinearLayout mLinearLeft;
     AlbumListAdapter mAdapter;
     RequestQueue mVolleyRequest;
     ArrayList<AlbumList> mAlbumList=new ArrayList<>();
@@ -60,7 +53,7 @@ public class NavigationActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
-
+        mLinearLeft=findViewById(R.id.linear_left);
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -109,6 +102,7 @@ public class NavigationActivity extends AppCompatActivity
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     mAlbumList.add(new AlbumList("http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg","My Wedding"));
+                    mLinearLeft.setVisibility(View.VISIBLE);
                     mAdapter.notifyDataSetChanged();
                 }
             }

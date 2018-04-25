@@ -33,7 +33,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -68,6 +67,7 @@ public class CurlActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+
         sweetAlertDialog=new SweetAlertDialog(CurlActivity.this, SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Loading...")
 
@@ -85,8 +85,9 @@ public class CurlActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-         mBitmapIds = new String[]{"https://mccainphoto  graphy.files.wordpress.com/2012/11/mccainpictures071.jpg",
+         mBitmapIds = new String[]{
                  "https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg",
+                 "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
                  "https://i.ytimg.com/vi/xsjGKpsDjgU/maxresdefault.jpg",
                  "http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg",
                  "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
@@ -138,7 +139,6 @@ public class CurlActivity extends Activity {
                 finish();
             }
         });
-
     }
 
     @Override
@@ -309,7 +309,6 @@ public MyProvider(){
                 connection.connect();
                 InputStream input=connection.getInputStream();
                 image= BitmapFactory.decodeStream(input);
-
                 imgUrls.add(image);
                 bit[pos]=image;
 
