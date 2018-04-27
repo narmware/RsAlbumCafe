@@ -13,20 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon"
-        >
-
+        tools:replace="android:icon">
         <activity android:name=".MainActivity" />
         <activity
             android:name=".curl.CurlActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activity.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"
-
-            >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,8 +32,11 @@
         <activity
             android:name=".activity.AlbumDetailedActivity"
             android:label="@string/title_activity_album_detailed"
-            android:screenOrientation="landscape"
-            ></activity>
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.DemoActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
     </application>
 
 </manifest>

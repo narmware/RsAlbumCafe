@@ -37,6 +37,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rohitsavant.curlexample.R;
+import com.rohitsavant.curlexample.helper.TouchImageView;
+import com.rohitsavant.curlexample.helper.ZoomLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +63,9 @@ public class CurlActivity extends Activity {
     SweetAlertDialog sweetAlertDialog;
     TextView mBtnGrid;
     LinearLayout mLinearBack;
-
+    TouchImageView relativeLayout;
+    ZoomLayout zoomLayout;
+    static Bitmap bitmap;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,15 +125,39 @@ public class CurlActivity extends Activity {
 
         // CAGS: This is to allow 2 pages landscape mode, set to false for legacy mode
         mCurlView.set2PagesLandscape(true);
+         relativeLayout=findViewById(R.id.img_screenshot);
 
         mBtnGrid=findViewById(R.id.btn_grid);
-        //mBtnGrid.setVisibility(View.VISIBLE);
+        mBtnGrid.setVisibility(View.VISIBLE);
         mBtnGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCurlView.setCurrentIndex(4);
+               //mCurlView.setCurrentIndex(4);
+                if(relativeLayout.getVisibility()==View.VISIBLE)
+                {
+                    relativeLayout.setVisibility(View.INVISIBLE);
+
+                }
+                if(relativeLayout.getVisibility()==View.INVISIBLE)
+                {
+                    relativeLayout.setVisibility(View.VISIBLE);
+                    bitmap = Bitmap.createBitmap(1000,1000, Bitmap.Config.ARGB_8888);
+                   /* Canvas c = new Canvas();
+                    relativeLayout.layout(200, 200,200, 200);
+                    relativeLayout.draw(c);
+                    Log.e("Bitmap image",bitmap+"");*/
+                    relativeLayout.setImageBitmap(bitmap);
+                   // bitmap.eraseColor(getResources().getColor(R.color.red_100));
+
+                }
+
+              /*  Canvas c = new Canvas(bitmap);
+                relativeLayout.layout(0, 0, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                relativeLayout.draw(c);*/
+
             }
         });
+
 
 
         mLinearBack=findViewById(R.id.linear_back);
@@ -141,6 +169,10 @@ public class CurlActivity extends Activity {
         });
     }
 
+    public static Bitmap getBitmap()
+    {
+        return bitmap;
+    }
     @Override
     public void onPause() {
         super.onPause();

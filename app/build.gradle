@@ -41,6 +41,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.7.0'
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.github.f0ris.sweetalert:library:1.5.1'
-    implementation 'com.alexvasilkov:gesture-views:2.5.1'
+    compile 'com.bogdwellers:pinchtozoom:0.1'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
 
 }
