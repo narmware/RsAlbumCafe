@@ -22,6 +22,7 @@ package com.rohitsavant.curlexample.curl;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -31,10 +32,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.helper.TouchImageView;
@@ -63,8 +69,9 @@ public class CurlActivity extends Activity {
     SweetAlertDialog sweetAlertDialog;
     TextView mBtnGrid;
     LinearLayout mLinearBack;
-    TouchImageView relativeLayout;
+    ImageView imageView;
     ZoomLayout zoomLayout;
+    LinearLayout relativeLayout;
     static Bitmap bitmap;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +132,9 @@ public class CurlActivity extends Activity {
 
         // CAGS: This is to allow 2 pages landscape mode, set to false for legacy mode
         mCurlView.set2PagesLandscape(true);
-         relativeLayout=findViewById(R.id.img_screenshot);
+        imageView=findViewById(R.id.img_screenshot);
+        zoomLayout=findViewById(R.id.zoomlay);
+        relativeLayout=findViewById(R.id.relative);
 
         mBtnGrid=findViewById(R.id.btn_grid);
         mBtnGrid.setVisibility(View.VISIBLE);
@@ -133,21 +142,15 @@ public class CurlActivity extends Activity {
             @Override
             public void onClick(View view) {
                //mCurlView.setCurrentIndex(4);
-                if(relativeLayout.getVisibility()==View.VISIBLE)
-                {
-                    relativeLayout.setVisibility(View.INVISIBLE);
 
-                }
-                if(relativeLayout.getVisibility()==View.INVISIBLE)
+                Toast.makeText(CurlActivity.this, "hello", Toast.LENGTH_SHORT).show();
+                if(zoomLayout.getVisibility()==View.INVISIBLE)
                 {
-                    relativeLayout.setVisibility(View.VISIBLE);
-                    bitmap = Bitmap.createBitmap(1000,1000, Bitmap.Config.ARGB_8888);
-                   /* Canvas c = new Canvas();
-                    relativeLayout.layout(200, 200,200, 200);
-                    relativeLayout.draw(c);
-                    Log.e("Bitmap image",bitmap+"");*/
-                    relativeLayout.setImageBitmap(bitmap);
-                   // bitmap.eraseColor(getResources().getColor(R.color.red_100));
+                    zoomLayout.setVisibility(View.VISIBLE);
+                    bitmap = createBitmapFromView(CurlActivity.this,relativeLayout);
+                    Log.e("Bitmap image",bitmap+"");
+
+                    //imageView.setImageBitmap(bitmap);
 
                 }
 
@@ -169,6 +172,23 @@ public class CurlActivity extends Activity {
         });
     }
 
+    private Bitmap createBitmapFromView(Context context, View view) {
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            view.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+            view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+            view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+            view.buildDrawingCache();
+            Bitmap b = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(b);
+            view.draw(canvas);
+            b.eraseColor(getResources().getColor(R.color.amber_100));
+
+        return b;
+    }
     public static Bitmap getBitmap()
     {
         return bitmap;

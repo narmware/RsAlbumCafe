@@ -15,7 +15,7 @@
 	</RelativeLayout>
 
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/relative"
 		android:layout_below="@id/rltv_toolbar"
 		android:layout_width="match_parent"
@@ -24,13 +24,17 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:id="@+id/curl" />
-	</RelativeLayout>
+	</LinearLayout>
 
-
-		<com.rohitsavant.curlexample.helper.TouchImageView
+<com.rohitsavant.curlexample.helper.ZoomLayout
+	android:id="@+id/zoomlay"
+	android:layout_below="@id/rltv_toolbar"
+	android:visibility="invisible"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+		<ImageView
 			android:id="@+id/img_screenshot"
-			android:visibility="invisible"
-			android:layout_below="@id/rltv_toolbar"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent" />
+</com.rohitsavant.curlexample.helper.ZoomLayout>
 </RelativeLayout>
