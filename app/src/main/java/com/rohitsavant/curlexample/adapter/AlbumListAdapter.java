@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.activity.AlbumDetailedActivity;
@@ -59,9 +60,10 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                     Intent intent=new Intent(mContext, AlbumDetailedActivity.class);
                     intent.putExtra(Constants.TITLE,mItem.getTitle());
                     intent.putExtra(Constants.ALBUM_IMAGE,mItem.getUrl());
+                    intent.putExtra(Constants.ALBUM_ID,mItem.getServer_id());
                     mContext.startActivity(intent);
 
-                   //Toast.makeText(mContext, mItem.getTitle(), Toast.LENGTH_SHORT).show();
+                   Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
 
                     int position= (int) mLinearItem.getTag();
 

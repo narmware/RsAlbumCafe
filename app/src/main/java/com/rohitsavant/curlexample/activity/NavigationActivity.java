@@ -1,5 +1,6 @@
 package com.rohitsavant.curlexample.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,14 +24,27 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.rohitsavant.curlexample.MyApplication;
 import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.adapter.AlbumListAdapter;
+import com.rohitsavant.curlexample.helper.Constants;
+import com.rohitsavant.curlexample.helper.DatabaseAccess;
 import com.rohitsavant.curlexample.helper.SharedPreferencesHelper;
+import com.rohitsavant.curlexample.helper.SupportFunctions;
 import com.rohitsavant.curlexample.pojo.AlbumList;
+import com.rohitsavant.curlexample.pojo.AlbumListResponse;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +62,7 @@ public class NavigationActivity extends AppCompatActivity
     ArrayList<AlbumList> mAlbumList=new ArrayList<>();
     boolean doubleBackToExitPressedOnce = false;
     String mAlbumId;
-
+    DatabaseAccess databaseAccess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,11 +113,9 @@ public class NavigationActivity extends AppCompatActivity
                     mEdtAlbumId.setError("Please enter album id");
                 }
                 else {
-                    Toast.makeText(NavigationActivity.this, "Album added successfully", Toast.LENGTH_SHORT).show();
+                    GetPhotoBook();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    mAlbumList.add(new AlbumList("http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg","My Wedding"));
-                    mLinearLeft.setVisibility(View.VISIBLE);
                     mAdapter.notifyDataSetChanged();
                 }
             }
@@ -110,6 +123,10 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void init() {
+
+        databaseAccess = DatabaseAccess.getInstance(NavigationActivity.this);
+        databaseAccess.open();
+
         ButterKnife.bind(this);
         mVolleyRequest = Volley.newRequestQueue(NavigationActivity.this);
 
@@ -117,17 +134,19 @@ public class NavigationActivity extends AppCompatActivity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         setAlbumAdapter(new LinearLayoutManager(NavigationActivity.this));
+
+        ArrayList<AlbumList> albumLists=databaseAccess.getAllAlbums();
+        Log.e("Local",albumLists.size()+"");
+        for(int i=1;i<albumLists.size();i++)
+        {
+            AlbumList album=albumLists.get(i);
+            Log.e("Local db data",albumLists.get(i).getTitle());
+            mAlbumList.add(album);
+        }
 }
 
     public void setAlbumAdapter(RecyclerView.LayoutManager mLayoutManager){
         SnapHelper snapHelper = new LinearSnapHelper();
-
-        mAlbumList.clear();
-        mAlbumList.add(new AlbumList("https://mccainphotography.files.wordpress.com/2012/11/mccainpictures071.jpg","My Wedding"));
-        mAlbumList.add(new AlbumList("http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg","My Birthday"));
-        mAlbumList.add(new AlbumList("https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg","My Wedding"));
-        mAlbumList.add(new AlbumList("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_xW6BPnyIKNoOrB15uTjjtE34BOjNJOdIOA7VsYWne37BuEmQCw","My Wedding"));
-        mAlbumList.add(new AlbumList("http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg","My Wedding"));
 
         mAdapter = new AlbumListAdapter(NavigationActivity.this,mAlbumList);
         //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(GalleryActivity.this,2);
@@ -214,4 +233,73 @@ public class NavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void GetPhotoBook() {
+
+
+        final ProgressDialog dialog = new ProgressDialog(NavigationActivity.this);
+        dialog.setMessage("getting details ...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        HashMap<String,String> param = new HashMap();
+        param.put(Constants.REQUEST_ALBUM,mAlbumId);
+
+        String url= SupportFunctions.appendParam(MyApplication.URL_GET_ALBUM,param);
+
+        JsonObjectRequest obreq = new JsonObjectRequest(Request.Method.GET,url,null,
+                // The third parameter Listener overrides the method onResponse() and passes
+                //JSONObject as a parameter
+                new Response.Listener<JSONObject>() {
+
+                    // Takes the response from the JSON request
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try
+                        {
+                            //getting test master array
+                            // testMasterDetails = testMasterArray.toString();
+
+                            Log.e("sharedphoto Json_string",response.toString());
+                            Gson gson = new Gson();
+
+                            AlbumListResponse photoResponse= gson.fromJson(response.toString(), AlbumListResponse.class);
+
+                            if(photoResponse.getResponse().equals("100")) {
+                                AlbumList[] photo = photoResponse.getData();
+                                for (AlbumList item : photo) {
+                                    mAlbumList.add(item);
+                                    Log.e("Featured img title", item.getTitle());
+                                    databaseAccess.setAlbum(item.getServer_id(),item.getTitle(),item.getUrl());
+                                    mLinearLeft.setVisibility(View.VISIBLE);
+                                }
+
+                                mAdapter.notifyDataSetChanged();
+                                Toast.makeText(NavigationActivity.this, "Album added successfully", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                            dialog.dismiss();
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                // The final parameter overrides the method onErrorResponse() and passes VolleyError
+                //as a parameter
+                new Response.ErrorListener() {
+                    @Override
+                    // Handles errors that occur due to Volley
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Volley", "Test Error");
+                       // showNoConnectionDialog();
+                        dialog.dismiss();
+
+                    }
+                }
+        );
+        mVolleyRequest.add(obreq);
+    }
+
 }

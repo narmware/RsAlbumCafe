@@ -1,19 +1,30 @@
 package com.rohitsavant.curlexample.pojo;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by savvy on 4/28/2018.
  */
 
 public class AlbumImages {
-Bitmap bitmap;
+String photo_path,type;
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public AlbumImages(String photo_path, String type) {
+        this.photo_path = photo_path;
+        this.type = type;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public String getPhoto_path() {
+        return photo_path;
+    }
+
+    public void setPhoto_path(String photo_path) {
+        this.photo_path = photo_path;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

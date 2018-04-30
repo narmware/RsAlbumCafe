@@ -11,6 +11,7 @@
     <LinearLayout
         android:id="@+id/linear_back"
         android:gravity="center"
+        android:foreground="?attr/selectableItemBackground"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
@@ -47,6 +48,7 @@
     <LinearLayout
         android:id="@+id/linear_zoom"
         android:visibility="invisible"
+        android:gravity="center"
         android:orientation="horizontal"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -56,6 +58,7 @@
         android:id="@+id/btn_zoom_in"
         android:layout_width="wrap_content"
         android:minWidth="0dp"
+        android:foreground="?attr/selectableItemBackground"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_zoom_in"
         android:layout_marginRight="6dp"
@@ -66,6 +69,7 @@
             android:id="@+id/btn_zoom_out"
             android:layout_width="wrap_content"
             android:minWidth="0dp"
+            android:foreground="?attr/selectableItemBackground"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_zoom_out"
             android:layout_marginRight="6dp"
@@ -76,6 +80,7 @@
             android:id="@+id/btn_grid"
             android:layout_width="wrap_content"
             android:minWidth="0dp"
+            android:foreground="?attr/selectableItemBackground"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_grid"
             android:layout_marginRight="6dp"

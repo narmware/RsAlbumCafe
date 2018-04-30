@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.rohitsavant.curlexample.R;
+import com.rohitsavant.curlexample.curl.CurlActivity;
 
 
 /**
@@ -35,7 +35,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.MyViewHolder
                 public void onClick(View view) {
                     final int position= (int) mImgFrame.getTag();
 
-                    Toast.makeText(mContext,position+"" , Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mContext,position+"" , Toast.LENGTH_SHORT).show();
+                    CurlActivity.mCurlView.setCurrentIndex(position);
+                    CurlActivity.dialog.dismiss();
                     }
             });
 

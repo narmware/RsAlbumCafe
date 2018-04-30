@@ -20,6 +20,7 @@
         android:layout_height="wrap_content">
     <ImageButton
         android:id="@+id/btn_nav"
+        android:foreground="?attr/selectableItemBackground"
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/ic_menu"
         android:layout_width="50dp"
@@ -27,6 +28,7 @@
 
         <ImageButton
             android:id="@+id/btn_delete"
+            android:foreground="?attr/selectableItemBackground"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_delete"
             android:layout_width="50dp"

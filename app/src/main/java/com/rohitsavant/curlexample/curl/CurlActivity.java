@@ -64,7 +64,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 public class CurlActivity extends Activity {
 
-    private CurlView mCurlView;
+    public static CurlView mCurlView;
     Bitmap image;
     ArrayList<Bitmap> imgUrls=new ArrayList<>();
     Bitmap[] bit;
@@ -77,7 +77,7 @@ public class CurlActivity extends Activity {
     ZoomLayout zoomLayout;
     LinearLayout relativeLayout;
     static Bitmap bitmap;
-    DialogPlus dialog;
+    public static DialogPlus dialog;
     RecyclerView mRecyclerView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,6 +157,7 @@ public class CurlActivity extends Activity {
                 int single=0;
                 Log.e("Bitmap image",bit[0]+"");
                 zoomLayout.setVisibility(View.VISIBLE);
+                mImgGrid.setVisibility(View.GONE);
                 if(currentIndex==bit.length)
                 {
                     //Toast.makeText(CurlActivity.this, currentIndex+"  "+bit.length,Toast.LENGTH_SHORT).show();
@@ -193,35 +194,21 @@ public class CurlActivity extends Activity {
             @Override
             public void onClick(View view) {
                 zoomLayout.setVisibility(View.INVISIBLE);
+                mImgGrid.setVisibility(View.VISIBLE);
             }
         });
 
         mImgGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              /*  PhotoAdapter photoAdapter=new PhotoAdapter(bit,CurlActivity.this);
-                DialogPlus dialog = DialogPlus.newDialog(CurlActivity.this)
-                        .setAdapter(photoAdapter)
-                        .setExpanded(true,500)
-                        .setContentHolder(new GridHolder(5))
-// This will enable the expand feature, (similar to android L share dialog)
-                        .setGravity(Gravity.TOP)
-                        .setOnItemClickListener(new OnItemClickListener() {
-                            @Override
-                            public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
-                                Toast.makeText(CurlActivity.this, position+"", Toast.LENGTH_SHORT).show();
-                                mCurlView.setCurrentIndex(position);
-                                dialog.dismiss();
-                            }
-                        })
-                        .create();
-                dialog.show();*/
+
                 dialog = DialogPlus.newDialog(CurlActivity.this)
-                        .setExpanded(true,1000)
+                        .setExpanded(true,RelativeLayout.LayoutParams.WRAP_CONTENT)
                         .setContentHolder(new ViewHolder(R.layout.lay_image))
                         .setGravity(Gravity.TOP)
+                        .setBackgroundColorResId(R.color.dialogplus_black_overlay)
                         .create();
-                setAlbumAdapter(new GridLayoutManager(CurlActivity.this,4));
+                setAlbumAdapter(new GridLayoutManager(CurlActivity.this,5));
 
                 dialog.show();
             }
@@ -252,7 +239,7 @@ public class CurlActivity extends Activity {
 
     }
 
-    private Bitmap createBitmapFromView(Context context, View view) {
+    public Bitmap createBitmapFromView(Context context, View view) {
 
             DisplayMetrics displayMetrics = new DisplayMetrics();
             ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
