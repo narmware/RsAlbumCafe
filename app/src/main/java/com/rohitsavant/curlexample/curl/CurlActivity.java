@@ -32,18 +32,21 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 import com.rohitsavant.curlexample.R;
-import com.rohitsavant.curlexample.helper.TouchImageView;
+import com.rohitsavant.curlexample.adapter.ImageAdapter;
 import com.rohitsavant.curlexample.helper.ZoomLayout;
 
 import java.io.IOException;
@@ -67,12 +70,15 @@ public class CurlActivity extends Activity {
     Bitmap[] bit;
     String[] mBitmapIds;
     SweetAlertDialog sweetAlertDialog;
-    TextView mBtnGrid;
+    LinearLayout mLinearZoom;
+    ImageView mImgZoomIn,mImgZoomOut;
     LinearLayout mLinearBack;
-    ImageView imageView;
+    ImageView mImgLeft,mImgRight,mImgGrid;
     ZoomLayout zoomLayout;
     LinearLayout relativeLayout;
     static Bitmap bitmap;
+    DialogPlus dialog;
+    RecyclerView mRecyclerView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,36 +138,94 @@ public class CurlActivity extends Activity {
 
         // CAGS: This is to allow 2 pages landscape mode, set to false for legacy mode
         mCurlView.set2PagesLandscape(true);
-        imageView=findViewById(R.id.img_screenshot);
+        mImgLeft=findViewById(R.id.img_left);
+        mImgRight=findViewById(R.id.img_right);
         zoomLayout=findViewById(R.id.zoomlay);
         relativeLayout=findViewById(R.id.relative);
 
-        mBtnGrid=findViewById(R.id.btn_grid);
-        mBtnGrid.setVisibility(View.VISIBLE);
-        mBtnGrid.setOnClickListener(new View.OnClickListener() {
+        mImgZoomIn=findViewById(R.id.btn_zoom_in);
+        mImgZoomOut=findViewById(R.id.btn_zoom_out);
+        mImgGrid=findViewById(R.id.btn_grid);
+        mLinearZoom=findViewById(R.id.linear_zoom);
+
+        mLinearZoom.setVisibility(View.VISIBLE);
+        mImgZoomIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               //mCurlView.setCurrentIndex(4);
 
-                Toast.makeText(CurlActivity.this, "hello", Toast.LENGTH_SHORT).show();
-                if(zoomLayout.getVisibility()==View.INVISIBLE)
+                int currentIndex=mCurlView.getCurrentIndex();
+                int single=0;
+                Log.e("Bitmap image",bit[0]+"");
+                zoomLayout.setVisibility(View.VISIBLE);
+                if(currentIndex==bit.length)
                 {
-                    zoomLayout.setVisibility(View.VISIBLE);
-                    bitmap = createBitmapFromView(CurlActivity.this,relativeLayout);
-                    Log.e("Bitmap image",bitmap+"");
-
-                    //imageView.setImageBitmap(bitmap);
-
+                    //Toast.makeText(CurlActivity.this, currentIndex+"  "+bit.length,Toast.LENGTH_SHORT).show();
+                    if(bit.length % 2==0) {
+                        single = currentIndex-1;
+                        mImgLeft.setVisibility(View.GONE);
+                        mImgRight.setLayoutParams(new LinearLayout.LayoutParams(1000, 600));
+                        mImgRight.setImageBitmap(bit[single]);
+                    }
                 }
+                if(currentIndex==0)
+                {
+                    single=currentIndex;
+                    mImgLeft.setVisibility(View.GONE);
+                    mImgRight.setLayoutParams(new LinearLayout.LayoutParams(1000, 600));
+                    mImgRight.setImageBitmap(bit[single]);
+                }
+                 if(currentIndex!=0 && currentIndex!=bit.length){
+                    int right = currentIndex;
+                    int left = currentIndex - 1;
 
-              /*  Canvas c = new Canvas(bitmap);
-                relativeLayout.layout(0, 0, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                relativeLayout.draw(c);*/
+                    if(mImgLeft.getVisibility()==View.GONE)
+                    {
+                        mImgLeft.setVisibility(View.VISIBLE);
+                    }
+                    mImgLeft.setImageBitmap(bit[left]);
+                    mImgRight.setImageBitmap(bit[right]);
+                }
 
             }
         });
 
+        mImgZoomOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zoomLayout.setVisibility(View.INVISIBLE);
+            }
+        });
 
+        mImgGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              /*  PhotoAdapter photoAdapter=new PhotoAdapter(bit,CurlActivity.this);
+                DialogPlus dialog = DialogPlus.newDialog(CurlActivity.this)
+                        .setAdapter(photoAdapter)
+                        .setExpanded(true,500)
+                        .setContentHolder(new GridHolder(5))
+// This will enable the expand feature, (similar to android L share dialog)
+                        .setGravity(Gravity.TOP)
+                        .setOnItemClickListener(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+                                Toast.makeText(CurlActivity.this, position+"", Toast.LENGTH_SHORT).show();
+                                mCurlView.setCurrentIndex(position);
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+                dialog.show();*/
+                dialog = DialogPlus.newDialog(CurlActivity.this)
+                        .setExpanded(true,1000)
+                        .setContentHolder(new ViewHolder(R.layout.lay_image))
+                        .setGravity(Gravity.TOP)
+                        .create();
+                setAlbumAdapter(new GridLayoutManager(CurlActivity.this,4));
+
+                dialog.show();
+            }
+        });
 
         mLinearBack=findViewById(R.id.linear_back);
         mLinearBack.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +234,22 @@ public class CurlActivity extends Activity {
                 finish();
             }
         });
+    }
+    public void setAlbumAdapter(RecyclerView.LayoutManager mLayoutManager){
+
+        View view=dialog.getHolderView();
+        mRecyclerView=view.findViewById(R.id.recycler);
+
+        ImageAdapter imageAdapter=new ImageAdapter(CurlActivity.this,bit);
+        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(GalleryActivity.this,2);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(imageAdapter);
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mRecyclerView.setFocusable(false);
+
+        imageAdapter.notifyDataSetChanged();
+
     }
 
     private Bitmap createBitmapFromView(Context context, View view) {
@@ -184,14 +264,10 @@ public class CurlActivity extends Activity {
             Bitmap b = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
 
             Canvas canvas = new Canvas(b);
-            view.draw(canvas);
+             view.draw(canvas);
             b.eraseColor(getResources().getColor(R.color.amber_100));
 
         return b;
-    }
-    public static Bitmap getBitmap()
-    {
-        return bitmap;
     }
     @Override
     public void onPause() {
@@ -207,11 +283,12 @@ public class CurlActivity extends Activity {
 
     @Override
     public Object onRetainNonConfigurationInstance() {
+       // Toast.makeText(CurlActivity.this,mCurlView.getCurrentIndex()+"",Toast.LENGTH_SHORT).show();
         return mCurlView.getCurrentIndex();
     }
 
     /**
-     * Bitmap provider.
+     * Bitmap provider for int values
      */
     private class BitmapProvider implements CurlView.BitmapProvider {
 
@@ -263,10 +340,12 @@ public class CurlActivity extends Activity {
         }
     }
 
+    /**
+     * Bitmap provider for string values
+     */
     private class MyProvider implements CurlView.BitmapProvider {
 
-     /*   private int[] mBitmapIds = { R.drawable.obama, R.drawable.road_rage,
-                R.drawable.taipei_101, R.drawable.world };*/
+
 
 public MyProvider(){
     Log.e("Const Data",mBitmapIds.length+"");

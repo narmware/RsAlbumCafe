@@ -65,7 +65,6 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
 
                     int position= (int) mLinearItem.getTag();
 
-
                     }
             });
 

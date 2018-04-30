@@ -29,6 +29,7 @@ import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.rohitsavant.curlexample.R;
 
@@ -108,6 +109,7 @@ public class CurlView extends GLSurfaceView implements View.OnTouchListener,
     public CurlView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
         init(ctx);
+
     }
 
     /**

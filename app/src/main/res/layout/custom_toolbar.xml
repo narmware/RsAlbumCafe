@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_alignParentTop="true"
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_alignParentTop="true"
     android:background="@color/colorPrimary"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
@@ -14,14 +15,15 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:minWidth="0dp"
             android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_arrow_back"
+            android:src="@drawable/ic_arrow_back"
             android:layout_marginRight="6dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="VectorDrawableCompat" />
 
         <TextView
             android:textColor="@android:color/white"
@@ -38,20 +40,46 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:layout_toRightOf="@id/linear_back"
-        android:layout_toLeftOf="@id/btn_grid"
+        android:layout_toLeftOf="@id/linear_zoom"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/linear_zoom"
         android:visibility="invisible"
-        android:id="@+id/btn_grid"
-        android:gravity="center"
-        android:layout_centerVertical="true"
+        android:orientation="horizontal"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Grid"
-        android:textColor="@android:color/white"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/btn_zoom_in"
+        android:layout_width="wrap_content"
+        android:minWidth="0dp"
         android:background="@android:color/transparent"
-        />
+        android:src="@drawable/ic_zoom_in"
+        android:layout_marginRight="6dp"
+        android:layout_height="wrap_content"
+        tools:ignore="VectorDrawableCompat" />
+
+        <ImageView
+            android:id="@+id/btn_zoom_out"
+            android:layout_width="wrap_content"
+            android:minWidth="0dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_zoom_out"
+            android:layout_marginRight="6dp"
+            android:layout_height="wrap_content"
+            tools:ignore="VectorDrawableCompat" />
+
+        <ImageView
+            android:id="@+id/btn_grid"
+            android:layout_width="wrap_content"
+            android:minWidth="0dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_grid"
+            android:layout_marginRight="6dp"
+            android:layout_height="wrap_content"
+            tools:ignore="VectorDrawableCompat" />
+    </LinearLayout>
 </RelativeLayout>
