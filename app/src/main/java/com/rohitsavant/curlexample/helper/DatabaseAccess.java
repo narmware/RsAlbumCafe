@@ -5,8 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.rohitsavant.curlexample.pojo.AlbumList;
+import com.rohitsavant.curlexample.pojo.BitmapImages;
 import com.rohitsavant.curlexample.pojo.PhotographerDetails;
 
 import java.util.ArrayList;
@@ -19,7 +24,7 @@ public class DatabaseAccess {
     ArrayList<AlbumList> albumLists;
     AlbumList album;
     PhotographerDetails photographerDetails;
-
+    ArrayList<BitmapImages> bitmapImages;
     //QuizPojo quesDetails;
 
     /**
@@ -90,6 +95,11 @@ public class DatabaseAccess {
         //database.close();
         return albumLists;
     }
+    public void deleteSingleAlbum(String server_id)
+    {
+        database.execSQL("delete from Album where "+Constants.ALBUM_SERVER_ID+"="+server_id);
+        database.execSQL("delete from AlbumImages where "+Constants.ALBUM_SERVER_ID+"="+server_id);
+    }
 
     public void setPhotographer(String name, String address, String email, String mobile, String logo,String album_server_id) {
 
@@ -125,6 +135,60 @@ public class DatabaseAccess {
         return photographerDetails;
     }
 
+    public AlbumList getSingleAlbum(String album_server_id) {
+        Cursor cursor = database.rawQuery("SELECT * FROM Album where "+Constants.ALBUM_SERVER_ID+"="+album_server_id, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            //  String str=Integer.toString(cursor.getInt(0))+" "+cursor.getString(1)+" "+cursor.getString(2)+" "+cursor.getString(3);
+            String url=cursor.getString(1);
+            String title=cursor.getString(2);
+            String server_id=cursor.getString(3);
+
+            album= new AlbumList(url,title,server_id);
+
+            cursor.moveToNext();
+        }
+        cursor.close();
+        //database.close();
+        return album;
+    }
+
+    public void setAlbumImages(String server_id,byte[] image ) {
+
+        ContentValues values = new ContentValues();
+        values.put("photo_path", image);
+        values.put(Constants.ALBUM_SERVER_ID,server_id);
+
+        database.insert("AlbumImages", null, values);
+    }
+
+    public ArrayList<BitmapImages> getImage(String album_server_id) {
+        bitmapImages=new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM AlbumImages where "+Constants.ALBUM_SERVER_ID+"="+album_server_id, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            //  String str=Integer.toString(cursor.getInt(0))+" "+cursor.getString(1)+" "+cursor.getString(2)+" "+cursor.getString(3);
+            byte[] image = cursor.getBlob(0);
+            Bitmap bitmap=DbBitmapUtility.getImage(image);
+
+            BitmapImages bit=new BitmapImages(bitmap);
+            bitmapImages.add(bit);
+
+            cursor.moveToNext();
+            Log.e("Database image",bitmap+"");
+        }
+        cursor.close();
+        //database.close();
+        return bitmapImages;
+    }
+
+    public static class DbBitmapUtility {
+
+        // convert from byte array to bitmap
+        public static Bitmap getImage(byte[] image) {
+            return BitmapFactory.decodeByteArray(image, 0, image.length);
+        }
+    }
  /*
 
     public List<Image> getAllDetails() {

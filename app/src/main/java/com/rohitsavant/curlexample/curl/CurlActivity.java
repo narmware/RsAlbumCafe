@@ -22,7 +22,9 @@ package com.rohitsavant.curlexample.curl;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,6 +32,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -43,17 +46,39 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
+import com.rohitsavant.curlexample.MyApplication;
 import com.rohitsavant.curlexample.R;
+import com.rohitsavant.curlexample.activity.AlbumDetailedActivity;
 import com.rohitsavant.curlexample.adapter.ImageAdapter;
+import com.rohitsavant.curlexample.helper.Constants;
+import com.rohitsavant.curlexample.helper.DatabaseAccess;
+import com.rohitsavant.curlexample.helper.SupportFunctions;
 import com.rohitsavant.curlexample.helper.ZoomLayout;
+import com.rohitsavant.curlexample.pojo.AlbumImages;
+import com.rohitsavant.curlexample.pojo.AlbumImagesResponse;
+import com.rohitsavant.curlexample.pojo.BitmapImages;
+import com.rohitsavant.curlexample.pojo.PhotographerDetails;
+import com.rohitsavant.curlexample.pojo.PhotographerResponse;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -79,18 +104,34 @@ public class CurlActivity extends Activity {
     static Bitmap bitmap;
     public static DialogPlus dialog;
     RecyclerView mRecyclerView;
+    String mAid;
+    RequestQueue mVolleyRequest;
+    ArrayList<AlbumImages> albumImages=new ArrayList<>();
+    MediaPlayer mp;
+    DatabaseAccess databaseAccess;
+    ProgressDialog progress;
+
+    int mProgress=0;
+    int mpFlag=0;
+    int mpLength=0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        mVolleyRequest = Volley.newRequestQueue(CurlActivity.this);
 
+        databaseAccess = DatabaseAccess.getInstance(CurlActivity.this);
+        databaseAccess.open();
+
+        Intent intent=getIntent();
+        mAid=intent.getStringExtra(Constants.ALBUM_SERVER_ID);
 
         sweetAlertDialog=new SweetAlertDialog(CurlActivity.this, SweetAlertDialog.PROGRESS_TYPE)
-                .setTitleText("Loading...")
-
-        ;
+                .setTitleText("Loading...");
         sweetAlertDialog.setCancelable(false);
-        sweetAlertDialog.show();
+        //sweetAlertDialog.show();
+
 
        /* try {
             MediaPlayer mp =new MediaPlayer();
@@ -102,31 +143,11 @@ public class CurlActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-         mBitmapIds = new String[]{
-                 "https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg",
-                 "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
-                 "https://i.ytimg.com/vi/xsjGKpsDjgU/maxresdefault.jpg",
-                 "http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg",
-                 "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
-                  "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg",
-         };
-
-        bit=new Bitmap[mBitmapIds.length];
-
-        for(int i=0;i<mBitmapIds.length;i++)
-         {
-             try {
-                 new drawableFromUrl().execute(mBitmapIds[i],String.valueOf(i));
-             }catch (Exception e)
-             {
-
-             }
-         }
-
         int index = 0;
         if (getLastNonConfigurationInstance() != null) {
             index = (Integer) getLastNonConfigurationInstance();
         }
+
         mCurlView = (CurlView) findViewById(R.id.curl);
         mCurlView.setCurrentIndex(index);
         mCurlView.setSizeChangedObserver(new SizeChangedObserver());
@@ -138,6 +159,39 @@ public class CurlActivity extends Activity {
 
         // CAGS: This is to allow 2 pages landscape mode, set to false for legacy mode
         mCurlView.set2PagesLandscape(true);
+
+        ArrayList<BitmapImages> bitmapImages=databaseAccess.getImage(mAid);
+        Log.e("Database size",bitmapImages.size()+"");
+
+        if(bitmapImages.size()!=0)
+        {
+            bit=new Bitmap[bitmapImages.size()];
+            for(int b=0;b<bitmapImages.size();b++)
+            {
+                bit[b]=bitmapImages.get(b).getImages();
+                if(b==bitmapImages.size()-1) {
+                    mCurlView.setBitmapProvider(new MyProvider());
+                    mp = MediaPlayer.create(CurlActivity.this, R.raw.songs);
+                    mp.start();
+
+                    if(mpFlag==1)
+                    {
+                        mp.seekTo(mpLength);
+                        mp.start();
+                    }
+                    /*try{
+                        sweetAlertDialog.dismissWithAnimation();}catch (Exception e){}*/
+
+                }
+                Log.e("Database images",bitmapImages.get(b).getImages().toString());
+            }
+        }
+
+        if(bitmapImages.size()==0) {
+            GetAlbumImages();
+        }
+       Log.e("Album size",albumImages.size()+"");
+
         mImgLeft=findViewById(R.id.img_left);
         mImgRight=findViewById(R.id.img_right);
         zoomLayout=findViewById(R.id.zoomlay);
@@ -158,6 +212,9 @@ public class CurlActivity extends Activity {
                 Log.e("Bitmap image",bit[0]+"");
                 zoomLayout.setVisibility(View.VISIBLE);
                 mImgGrid.setVisibility(View.GONE);
+                mImgZoomIn.setVisibility(View.GONE);
+                mImgZoomOut.setVisibility(View.VISIBLE);
+
                 if(currentIndex==bit.length)
                 {
                     //Toast.makeText(CurlActivity.this, currentIndex+"  "+bit.length,Toast.LENGTH_SHORT).show();
@@ -167,6 +224,7 @@ public class CurlActivity extends Activity {
                         mImgRight.setLayoutParams(new LinearLayout.LayoutParams(1000, 600));
                         mImgRight.setImageBitmap(bit[single]);
                     }
+
                 }
                 if(currentIndex==0)
                 {
@@ -195,6 +253,8 @@ public class CurlActivity extends Activity {
             public void onClick(View view) {
                 zoomLayout.setVisibility(View.INVISIBLE);
                 mImgGrid.setVisibility(View.VISIBLE);
+                mImgZoomIn.setVisibility(View.VISIBLE);
+                mImgZoomOut.setVisibility(View.GONE);
             }
         });
 
@@ -219,9 +279,23 @@ public class CurlActivity extends Activity {
             @Override
             public void onClick(View view) {
                 finish();
+                if(mp.isPlaying()==true)
+                {
+                    mp.stop();
+                }
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(mp.isPlaying()==true)
+        {
+            mp.stop();
+        }
+    }
+
     public void setAlbumAdapter(RecyclerView.LayoutManager mLayoutManager){
 
         View view=dialog.getHolderView();
@@ -259,13 +333,25 @@ public class CurlActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        mCurlView.onPause();
+        if(mp.isPlaying()==true)
+        {
+            mp.pause();
+            mpLength=mp.getCurrentPosition();
+            mpFlag=1;
+        }
+       // mCurlView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mCurlView.onResume();
+        //mCurlView.onResume();
+
+        if(mpFlag==1)
+        {
+            mp.seekTo(mpLength);
+           // mp.start();
+        }
     }
 
     @Override
@@ -277,6 +363,7 @@ public class CurlActivity extends Activity {
     /**
      * Bitmap provider for int values
      */
+/*
     private class BitmapProvider implements CurlView.BitmapProvider {
 
         private int[] mBitmapIds = { R.drawable.obama, R.drawable.road_rage,
@@ -326,6 +413,7 @@ public class CurlActivity extends Activity {
             return mBitmapIds.length;
         }
     }
+*/
 
     /**
      * Bitmap provider for string values
@@ -335,7 +423,7 @@ public class CurlActivity extends Activity {
 
 
 public MyProvider(){
-    Log.e("Const Data",mBitmapIds.length+"");
+    //Log.e("Const Data",mBitmapIds.length+"");
 }
         @Override
         public Bitmap getBitmap(int width, int height, int index) {
@@ -402,7 +490,7 @@ public MyProvider(){
             if (w > h) {
                 mCurlView.setViewMode(CurlView.SHOW_TWO_PAGES);
                // mCurlView.setMargins(.1f, .05f, .1f, .05f);
-                mCurlView.setMargins(0,.20f,0,.20f);
+                mCurlView.setMargins(0,.17f,0,.17f);
             } else {
                 mCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
                // mCurlView.setMargins(.1f, .1f, .1f, .1f);
@@ -426,16 +514,38 @@ public MyProvider(){
                 connection= (HttpURLConnection) new URL(s).openConnection();
                 connection.connect();
                 InputStream input=connection.getInputStream();
-                image= BitmapFactory.decodeStream(input);
+                //image= BitmapFactory.decodeStream(input);
+
+               /* BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 8;
+                image= BitmapFactory.decodeStream(input,null,options);*/
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = false;
+                options.inSampleSize=8;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                options.inDither = true;
+                image= BitmapFactory.decodeStream(input,null,options);
+                Log.e("Background images",image.toString());
+                mProgress++;
+                progress.setProgress(mProgress);
                 imgUrls.add(image);
+
                 bit[pos]=image;
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.PNG, 0, stream);
+                byte[] bytes= stream.toByteArray();
+                databaseAccess.setAlbumImages(mAid,bytes);
 
                 if(pos==mBitmapIds.length-1)
                 {
+                    progress.dismiss();
                     mCurlView.setBitmapProvider(new MyProvider());
-
-                    try{
-                    sweetAlertDialog.dismissWithAnimation();}catch (Exception e){}
+                    mp = MediaPlayer.create(CurlActivity.this, R.raw.songs);
+                    mp.start();
+                  /*  try{
+                    sweetAlertDialog.dismissWithAnimation();}catch (Exception e){}*/
                 }
 
 
@@ -445,4 +555,127 @@ public MyProvider(){
             return image;
         }
     }
+
+
+    private void GetAlbumImages() {
+        final ProgressDialog dialog = new ProgressDialog(CurlActivity.this);
+        dialog.setMessage("getting album ...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        HashMap<String,String> param = new HashMap();
+        param.put(Constants.ALBUM_ID,mAid);
+
+        String url= SupportFunctions.appendParam(MyApplication.URL_GET_ALBUM_IMAGES,param);
+        Log.e("url",url);
+        JsonObjectRequest obreq = new JsonObjectRequest(Request.Method.GET,url,null,
+                // The third parameter Listener overrides the method onResponse() and passes
+                //JSONObject as a parameter
+                new Response.Listener<JSONObject>() {
+
+                    // Takes the response from the JSON request
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try
+                        {
+                            //getting test master array
+                            // testMasterDetails = testMasterArray.toString();
+
+                            Log.e("Photos Json_string",response.toString());
+                            Gson gson = new Gson();
+
+                            AlbumImagesResponse photoResponse= gson.fromJson(response.toString(), AlbumImagesResponse.class);
+
+                            if(photoResponse.getResponse().equals("100")) {
+                                AlbumImages[] photo = photoResponse.getData();
+                                for (AlbumImages item : photo) {
+                                    Log.e("Featured img title", item.getPhoto_path());
+                                    AlbumImages singleImage=new AlbumImages(item.getPhoto_path(),item.getType());
+                                    albumImages.add(singleImage);
+                                }
+                                Log.e("Album size",albumImages.size()+"");
+                                showProgress(albumImages.size());
+                                mBitmapIds=new String[albumImages.size()];
+                                for(int a=0;a<albumImages.size();a++)
+                                {
+                                    mBitmapIds[a]=albumImages.get(a).getPhoto_path();
+                                }
+                                /*mBitmapIds = new String[]{
+                                        "https://onehdwallpaper.com/wp-content/uploads/2015/07/Punjabi-Wedding-Couple-in-Rain-HD-Picture.jpg",
+                                        "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
+                                        "https://i.ytimg.com/vi/xsjGKpsDjgU/maxresdefault.jpg",
+                                        "http://ak5.picdn.net/shutterstock/videos/6261785/thumb/1.jpg",
+                                        "http://www.coolhdwallpapers.net/gallery/romantic-park-wedding-hd-wallpaper.jpg",
+                                        "http://www.wallcoo.net/photography/SZ_221%20Garden%20Weddings%2001/wallpapers/1920x1200/Garden_Wedding_photography_022_Bride%20and%20bridegroom%20holding%20hands.jpg",
+                                };*/
+
+                                bit=new Bitmap[mBitmapIds.length];
+
+                                for(int i=0;i<mBitmapIds.length;i++)
+                                {
+                                    try {
+                                        new drawableFromUrl().execute(mBitmapIds[i],String.valueOf(i));
+                                    }catch (Exception e)
+                                    {
+
+                                    }
+                                }
+
+                            }
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                            dialog.dismiss();
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                // The final parameter overrides the method onErrorResponse() and passes VolleyError
+                //as a parameter
+                new Response.ErrorListener() {
+                    @Override
+                    // Handles errors that occur due to Volley
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("Volley", "Test Error");
+                        // showNoConnectionDialog();
+                        dialog.dismiss();
+
+                    }
+                }
+        );
+        mVolleyRequest.add(obreq);
+    }
+
+    public void showProgress(int end)
+    {
+        progress=new ProgressDialog(this);
+        progress.setMessage("Downloading Album");
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(false);
+        progress.setProgress(0);
+        progress.setMax(end);
+        progress.setCancelable(false);
+        progress.show();
+
+        /*final int totalProgressTime = end;
+        final Thread t = new Thread() {
+            @Override
+            public void run() {
+                int jumpTime = 0;
+
+                while(jumpTime < totalProgressTime) {
+                    try {
+                        sleep(200);
+
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        t.start();*/
+    }
+
 }

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import com.rohitsavant.curlexample.R;
 import com.rohitsavant.curlexample.activity.AlbumDetailedActivity;
 import com.rohitsavant.curlexample.activity.NavigationActivity;
 import com.rohitsavant.curlexample.helper.Constants;
+import com.rohitsavant.curlexample.helper.DatabaseAccess;
 import com.rohitsavant.curlexample.helper.SharedPreferencesHelper;
 import com.rohitsavant.curlexample.pojo.AlbumList;
 import com.squareup.picasso.Picasso;
@@ -45,9 +48,13 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
         AlbumList mItem;
         CoordinatorLayout mLinearItem;
         String videoId;
+        DatabaseAccess databaseAccess;
 
         public MyViewHolder(View view) {
             super(view);
+            databaseAccess = DatabaseAccess.getInstance(mContext);
+            databaseAccess.open();
+
             mBtnClose=view.findViewById(R.id.btn_close);
             mthumb_title= view.findViewById(R.id.thumb_title);
             mImgFrame=view.findViewById(R.id.thumb_img);
@@ -63,7 +70,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                     intent.putExtra(Constants.ALBUM_ID,mItem.getServer_id());
                     mContext.startActivity(intent);
 
-                   Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
+                   //Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
 
                     int position= (int) mLinearItem.getTag();
 
@@ -74,7 +81,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                 @Override
                 public void onClick(View view) {
                     final int position= (int) mLinearItem.getTag();
-
+                    //Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
                     new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Are you sure?")
                             .setContentText("Remove this album")
@@ -84,6 +91,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                                 public void onClick(SweetAlertDialog sDialog) {
 
                                     photos.remove(position);
+                                    databaseAccess.deleteSingleAlbum(mItem.getServer_id().toString());
                                     notifyDataSetChanged();
 
                                     sDialog
@@ -176,10 +184,11 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
         if(photos.size()==0)
         {
             NavigationActivity.mLinearLeft.setVisibility(View.GONE);
+            NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(1000, ViewGroup.LayoutParams.MATCH_PARENT));
         }
         else{
             NavigationActivity.mLinearLeft.setVisibility(View.VISIBLE);
-
+            NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
         }
         return photos.size();
     }

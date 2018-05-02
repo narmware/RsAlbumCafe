@@ -69,6 +69,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/linear_right"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -83,10 +84,9 @@
             android:id="@+id/img_logo"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_launcher_round"
+            android:background="@mipmap/ic_launcher"
             android:layout_width="50dp"
             android:layout_height="50dp" />
-
 
 
         <android.support.v7.widget.CardView
@@ -106,6 +106,8 @@
             <EditText
                 android:id="@+id/edt_alb_id"
                 android:inputType="text"
+                android:textAllCaps="true"
+                android:text="hello"
                 android:hint="Enter Album id"
                 android:padding="10dp"
                 android:textColor="@color/textColor"

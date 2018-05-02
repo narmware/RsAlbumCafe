@@ -62,7 +62,7 @@
                 android:id="@+id/img_album_logo"
                 android:layout_width="match_parent"
                 android:scaleType="fitXY"
-                android:layout_height="100dp" />
+                android:layout_height="120dp" />
 
             <LinearLayout
                 android:orientation="vertical"

@@ -70,20 +70,20 @@ public class AlbumDetailedActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         mVolleyRequest = Volley.newRequestQueue(AlbumDetailedActivity.this);
-        GetPhotographer();
 
         PhotographerDetails photographerDetails=databaseAccess.getPhotographer(mAId);
-        mTxtName.setText(photographerDetails.getName());
-        mTxtAddr.setText(photographerDetails.getAddress());
-        mTxtMobile.setText(photographerDetails.getMobile());
-        Picasso.with(AlbumDetailedActivity.this)
-                .load(photographerDetails.getLogo())
-                .fit()
-                .noFade()
-                .centerCrop()
-                .placeholder(R.drawable.ic_launcher_background)
-                .into(mImgLogo);
 
+        if(photographerDetails!=null) {
+            mTxtName.setText(photographerDetails.getName());
+            mTxtAddr.setText(photographerDetails.getAddress());
+            mTxtMobile.setText(photographerDetails.getMobile());
+            Picasso.with(AlbumDetailedActivity.this)
+                    .load(photographerDetails.getLogo())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .into(mImgLogo);
+        }else {
+            GetPhotographer();
+        }
         if(mTitle!=null)
         {
             mTxtTitle.setText(mTitle);
@@ -101,6 +101,7 @@ public class AlbumDetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(AlbumDetailedActivity.this, CurlActivity.class);
+                intent.putExtra(Constants.ALBUM_SERVER_ID,mAId);
                 startActivity(intent);
             }
         });
@@ -147,7 +148,18 @@ public class AlbumDetailedActivity extends AppCompatActivity {
                                 PhotographerDetails[] photo = photoResponse.getData();
                                 for (PhotographerDetails item : photo) {
                                     Log.e("Featured img title", item.getName());
+
                                     databaseAccess.setPhotographer(item.getName(),item.getAddress(),item.getEmail(),item.getMobile(),item.getLogo(),mAId);
+                                    mTxtName.setText(item.getName());
+                                    mTxtAddr.setText(item.getAddress());
+                                    mTxtMobile.setText(item.getMobile());
+                                    Picasso.with(AlbumDetailedActivity.this)
+                                            .load(item.getLogo())
+                                            .fit()
+                                            .noFade()
+                                            .centerCrop()
+                                            .placeholder(R.drawable.ic_launcher_background)
+                                            .into(mImgLogo);
                                 }
                             }
                         } catch (Exception e) {
