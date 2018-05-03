@@ -106,8 +106,6 @@
             <EditText
                 android:id="@+id/edt_alb_id"
                 android:inputType="text"
-                android:textAllCaps="true"
-                android:text="hello"
                 android:hint="Enter Album id"
                 android:padding="10dp"
                 android:textColor="@color/textColor"

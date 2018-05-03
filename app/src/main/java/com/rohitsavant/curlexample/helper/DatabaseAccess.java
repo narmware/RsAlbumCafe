@@ -100,7 +100,10 @@ public class DatabaseAccess {
         database.execSQL("delete from Album where "+Constants.ALBUM_SERVER_ID+"="+server_id);
         database.execSQL("delete from AlbumImages where "+Constants.ALBUM_SERVER_ID+"="+server_id);
     }
-
+    public void deleteAlbumImages(String server_id)
+    {
+        database.execSQL("delete from AlbumImages where "+Constants.ALBUM_SERVER_ID+"="+server_id);
+    }
     public void setPhotographer(String name, String address, String email, String mobile, String logo,String album_server_id) {
 
         ContentValues values = new ContentValues();

@@ -59,7 +59,7 @@ public class AlbumDetailedActivity extends AppCompatActivity {
         Intent intent=getIntent();
         mTitle=intent.getStringExtra(Constants.TITLE);
         mAlbumImageUrl=intent.getStringExtra(Constants.ALBUM_IMAGE);
-        mAId=intent.getStringExtra(Constants.ALBUM_ID);
+        mAId=intent.getStringExtra(Constants.ALBUM_SERVER_ID);
         init();
     }
 
@@ -147,7 +147,7 @@ public class AlbumDetailedActivity extends AppCompatActivity {
                             if(photoResponse.getResponse().equals("100")) {
                                 PhotographerDetails[] photo = photoResponse.getData();
                                 for (PhotographerDetails item : photo) {
-                                    Log.e("Featured img title", item.getName());
+                                    Log.e("Photographer name", item.getName());
 
                                     databaseAccess.setPhotographer(item.getName(),item.getAddress(),item.getEmail(),item.getMobile(),item.getLogo(),mAId);
                                     mTxtName.setText(item.getName());

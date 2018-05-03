@@ -14,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+         {
     @BindView(R.id.recycler) RecyclerView mRecyclerView;
     @BindView(R.id.btn_nav) ImageButton mBtnNav;
     @BindView(R.id.btn_delete) ImageButton mBtnDelete;
@@ -73,21 +75,20 @@ public class NavigationActivity extends AppCompatActivity
         SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
         mLinearLeft=findViewById(R.id.linear_left);
         mLinearRight=findViewById(R.id.linear_right);
-        //final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();*/
 
-        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         init();
 
         mBtnNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //drawer.openDrawer(GravityCompat.START);
+                drawer.openDrawer(GravityCompat.START);
             }
         });
 
@@ -109,6 +110,27 @@ public class NavigationActivity extends AppCompatActivity
             }
         });
 
+        mEdtAlbumId.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                          int arg3) {
+            }
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                String s=arg0.toString();
+                if(!s.equals(s.toUpperCase()))
+                {
+                    s=s.toUpperCase();
+                    mEdtAlbumId.setText(s);
+                    mEdtAlbumId.setSelection(s.length());
+                }
+            }
+        });
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,9 +192,10 @@ public class NavigationActivity extends AppCompatActivity
     }
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
 
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        /*if (drawer.isDrawerOpen(GravityCompat.START)) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
 
@@ -191,7 +214,7 @@ public class NavigationActivity extends AppCompatActivity
                     doubleBackToExitPressedOnce=false;
                 }
             }, 2000);
-        }*/
+        }
 
     }
 
@@ -217,7 +240,7 @@ public class NavigationActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }*/
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -241,7 +264,7 @@ public class NavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+*/
     private void GetPhotoBook() {
 
 
@@ -297,12 +320,14 @@ public class NavigationActivity extends AppCompatActivity
                             if(photoResponse.getResponse().equals("300"))
                             {
                                 //mEdtAlbumId.setError("Invalid album id");
-                                Toast.makeText(NavigationActivity.this, "Invalid album id", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(NavigationActivity.this, "Invalid album id", Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (Exception e) {
 
                             e.printStackTrace();
+                            mEdtAlbumId.setError("Invalid album id");
+                            //Toast.makeText(NavigationActivity.this, "Invalid album id", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                         dialog.dismiss();
@@ -315,7 +340,7 @@ public class NavigationActivity extends AppCompatActivity
                     // Handles errors that occur due to Volley
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Volley", "Test Error");
-                       // showNoConnectionDialog();
+                        // showNoConnectionDialog();
                         dialog.dismiss();
 
                     }

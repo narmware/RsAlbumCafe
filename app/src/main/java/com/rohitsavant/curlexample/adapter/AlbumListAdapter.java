@@ -67,7 +67,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                     Intent intent=new Intent(mContext, AlbumDetailedActivity.class);
                     intent.putExtra(Constants.TITLE,mItem.getTitle());
                     intent.putExtra(Constants.ALBUM_IMAGE,mItem.getUrl());
-                    intent.putExtra(Constants.ALBUM_ID,mItem.getServer_id());
+                    intent.putExtra(Constants.ALBUM_SERVER_ID,mItem.getServer_id());
                     mContext.startActivity(intent);
 
                    //Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();

@@ -45,6 +45,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -333,30 +334,36 @@ public class CurlActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        if(mp.isPlaying()==true)
+        try {
+            if (mp.isPlaying() == true) {
+                mp.pause();
+                mpLength = mp.getCurrentPosition();
+                mpFlag = 1;
+            }
+        }catch (Exception e)
         {
-            mp.pause();
-            mpLength=mp.getCurrentPosition();
-            mpFlag=1;
+
         }
-       // mCurlView.onPause();
+        mCurlView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //mCurlView.onResume();
+        mCurlView.onResume();
 
+        //Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
         if(mpFlag==1)
         {
             mp.seekTo(mpLength);
-           // mp.start();
+           mp.start();
         }
     }
 
     @Override
     public Object onRetainNonConfigurationInstance() {
-       // Toast.makeText(CurlActivity.this,mCurlView.getCurrentIndex()+"",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "OnRetai", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(CurlActivity.this,mCurlView.getCurrentIndex()+"",Toast.LENGTH_SHORT).show();
         return mCurlView.getCurrentIndex();
     }
 
