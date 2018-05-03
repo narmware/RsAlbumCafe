@@ -2,13 +2,13 @@ package com.rohitsavant.curlexample.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -17,7 +17,6 @@ import android.support.v7.widget.SnapHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -59,7 +58,11 @@ public class NavigationActivity extends AppCompatActivity
     @BindView(R.id.btn_nav) ImageButton mBtnNav;
     @BindView(R.id.btn_delete) ImageButton mBtnDelete;
     @BindView(R.id.btn_submit) Button mBtnSubmit;
-    @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
+             @BindView(R.id.btn_about) Button mBtnAbout;
+             @BindView(R.id.btn_contact) Button mBtnContact;
+             @BindView(R.id.btn_home) Button mBtnHome;
+
+             @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
     public static LinearLayout mLinearLeft;
     public static RelativeLayout mLinearRight;
     AlbumListAdapter mAdapter;
@@ -148,6 +151,31 @@ public class NavigationActivity extends AppCompatActivity
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     mAdapter.notifyDataSetChanged();
                 }
+            }
+        });
+
+        mBtnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
+        mBtnAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.closeDrawer(GravityCompat.START);
+                Intent intent=new Intent(NavigationActivity.this,AboutActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mBtnContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawer.closeDrawer(GravityCompat.START);
+                Intent intent=new Intent(NavigationActivity.this,ContactActivity.class);
+                startActivity(intent);
             }
         });
     }

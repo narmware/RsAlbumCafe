@@ -20,6 +20,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:elevation="1dp"
             android:gravity="center_vertical"
             android:padding="8dp"
             android:layout_margin="5dp"
@@ -34,15 +35,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
+                android:id="@+id/btn_home"
                 android:text="Home"
                 android:minHeight="1dp"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <LinearLayout
+            android:elevation="1dp"
             android:gravity="center_vertical"
             android:padding="8dp"
             android:layout_margin="5dp"
@@ -57,15 +60,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
+                android:id="@+id/btn_about"
                 android:text="About Us"
                 android:minHeight="1dp"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <LinearLayout
+            android:elevation="1dp"
             android:gravity="center_vertical"
             android:layout_margin="5dp"
             android:padding="8dp"
@@ -80,12 +85,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <Button
+                android:id="@+id/btn_contact"
                 android:text="Contact Us"
                 android:minHeight="1dp"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
             </LinearLayout>
 </RelativeLayout>
