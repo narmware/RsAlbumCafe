@@ -62,6 +62,7 @@ import com.rohitsavant.curlexample.activity.AlbumDetailedActivity;
 import com.rohitsavant.curlexample.adapter.ImageAdapter;
 import com.rohitsavant.curlexample.helper.Constants;
 import com.rohitsavant.curlexample.helper.DatabaseAccess;
+import com.rohitsavant.curlexample.helper.SharedPreferencesHelper;
 import com.rohitsavant.curlexample.helper.SupportFunctions;
 import com.rohitsavant.curlexample.helper.ZoomLayout;
 import com.rohitsavant.curlexample.pojo.AlbumImages;
@@ -166,6 +167,11 @@ public class CurlActivity extends Activity {
 
         if(bitmapImages.size()!=0)
         {
+            if(bitmapImages.size()< SharedPreferencesHelper.getAlbumImageCount(CurlActivity.this))
+            {
+                GetAlbumImages();
+                Toast.makeText(this, "Toatal not match", Toast.LENGTH_SHORT).show();
+            }
             bit=new Bitmap[bitmapImages.size()];
             for(int b=0;b<bitmapImages.size();b++)
             {
@@ -602,6 +608,7 @@ public MyProvider(){
                                     albumImages.add(singleImage);
                                 }
                                 Log.e("Album size",albumImages.size()+"");
+                                SharedPreferencesHelper.setAlbumImageCount(albumImages.size(),CurlActivity.this);
                                 showProgress(albumImages.size());
                                 mBitmapIds=new String[albumImages.size()];
                                 for(int a=0;a<albumImages.size();a++)

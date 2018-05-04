@@ -15,10 +15,36 @@
 
     </RelativeLayout>
 
-    <TextView
+    <ScrollView
+        android:background="@drawable/paper_back"
         android:layout_below="@id/header"
-        android:text="About us Comming soon..."
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+        android:text="@string/about_us"
+        android:textSize="17dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:padding="5dp"
+        android:fontFamily="casual"
+        android:textColor="@color/grey_900"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+        <ImageView
+            app:srcCompat="@drawable/logo"
+            android:layout_marginTop="20dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
 

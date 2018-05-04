@@ -79,7 +79,7 @@ public class AlbumDetailedActivity extends AppCompatActivity {
             mTxtMobile.setText(photographerDetails.getMobile());
             Picasso.with(AlbumDetailedActivity.this)
                     .load(photographerDetails.getLogo())
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.mipmap.ic_launcher)
                     .into(mImgLogo);
         }else {
             GetPhotographer();
@@ -94,7 +94,7 @@ public class AlbumDetailedActivity extends AppCompatActivity {
                 .fit()
                 .noFade()
                 .centerCrop()
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.mipmap.ic_launcher)
                 .into(mImgAlbum);
 
         mImgAlbum.setOnClickListener(new View.OnClickListener() {

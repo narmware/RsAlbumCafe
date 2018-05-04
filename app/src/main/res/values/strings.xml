@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RsAlbumCafe</string>
+    <string name="app_name">RS ePhotobook</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -7,4 +7,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_album_detailed">AlbumDetailedActivity</string>
+
+    <string name="about_us">An affordable soluion to publish digital photobook online. By using our service, You can share albums with your friends and family.
+        RS ePhotobooks can be viewed offline with our mobile app.
+    </string>
 </resources>

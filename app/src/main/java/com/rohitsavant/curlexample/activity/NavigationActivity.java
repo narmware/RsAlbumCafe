@@ -58,11 +58,11 @@ public class NavigationActivity extends AppCompatActivity
     @BindView(R.id.btn_nav) ImageButton mBtnNav;
     @BindView(R.id.btn_delete) ImageButton mBtnDelete;
     @BindView(R.id.btn_submit) Button mBtnSubmit;
-             @BindView(R.id.btn_about) Button mBtnAbout;
-             @BindView(R.id.btn_contact) Button mBtnContact;
-             @BindView(R.id.btn_home) Button mBtnHome;
-
-             @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
+    @BindView(R.id.btn_about) Button mBtnAbout;
+    @BindView(R.id.btn_contact) Button mBtnContact;
+    @BindView(R.id.btn_home) Button mBtnHome;
+    @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
+    DrawerLayout drawer;
     public static LinearLayout mLinearLeft;
     public static RelativeLayout mLinearRight;
     AlbumListAdapter mAdapter;
@@ -78,7 +78,7 @@ public class NavigationActivity extends AppCompatActivity
         SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
         mLinearLeft=findViewById(R.id.linear_left);
         mLinearRight=findViewById(R.id.linear_right);
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer= (DrawerLayout) findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -220,9 +220,8 @@ public class NavigationActivity extends AppCompatActivity
     }
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -337,7 +336,7 @@ public class NavigationActivity extends AppCompatActivity
                                     else {
                                         mAlbumList.add(item);
                                         Log.e("Featured img title", item.getTitle());
-                                        databaseAccess.setAlbum(item.getServer_id(), item.getTitle(), item.getUrl());
+                                        databaseAccess.setAlbum(item.getServer_id(), item.getTitle(), item.getUrl(),item.getAlbum_code());
                                         mLinearLeft.setVisibility(View.VISIBLE);
                                         mAdapter.notifyDataSetChanged();
                                         Toast.makeText(NavigationActivity.this, "Album added successfully", Toast.LENGTH_SHORT).show();

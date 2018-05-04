@@ -44,7 +44,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView mthumb_title;
         ImageView mImgFrame;
-        public ImageButton mBtnClose;
+        public ImageButton mBtnClose,mBtnShare;
         AlbumList mItem;
         CoordinatorLayout mLinearItem;
         String videoId;
@@ -55,6 +55,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
             databaseAccess = DatabaseAccess.getInstance(mContext);
             databaseAccess.open();
 
+            mBtnShare=view.findViewById(R.id.btn_share);
             mBtnClose=view.findViewById(R.id.btn_close);
             mthumb_title= view.findViewById(R.id.thumb_title);
             mImgFrame=view.findViewById(R.id.thumb_img);
@@ -119,6 +120,21 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                 }
             });
 
+            mBtnShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String shareBody = "You can view album '"+mItem.getTitle()+"' on app "
+                            +mContext.getResources().getString(R.string.app_name)
+                            +". The Album id is - "+mItem.getAlbum_code()+"\n"
+                            +"Download the app from below link :"+"\n"
+                            +"https://play.google.com/store/apps/details?id=com.narmware.rsalbumcafe";
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                    mContext.startActivity(Intent.createChooser(sharingIntent,"Choose app to share"));
+                }
+            });
         }
     }
 
@@ -173,7 +189,6 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                 .fit()
                 .noFade()
                 .centerCrop()
-                .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.mImgFrame);
         holder.mthumb_title.setText(photo.getTitle());
         holder.mItem=photo;

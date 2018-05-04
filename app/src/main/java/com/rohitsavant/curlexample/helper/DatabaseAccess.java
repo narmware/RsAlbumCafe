@@ -65,12 +65,13 @@ public class DatabaseAccess {
         }
     }
 
-    public void setAlbum(String server_id,String title,String url) {
+    public void setAlbum(String server_id,String title,String url,String album_code) {
 
         ContentValues values = new ContentValues();
         values.put(Constants.ALBUM_URL, url);
         values.put(Constants.ALBUM_TITLE, title);
         values.put(Constants.ALBUM_SERVER_ID, server_id);
+        values.put(Constants.ALBUM_CODE, album_code);
 
         database.insert("Album", null, values);
         //database.close();
@@ -85,8 +86,9 @@ public class DatabaseAccess {
             String url=cursor.getString(1);
             String title=cursor.getString(2);
             String server_id=cursor.getString(3);
+            String album_code=cursor.getString(4);
 
-            AlbumList album= new AlbumList(url,title,server_id);
+            AlbumList album= new AlbumList(url,title,server_id,album_code);
             albumLists.add(album);
 
             cursor.moveToNext();
@@ -146,8 +148,9 @@ public class DatabaseAccess {
             String url=cursor.getString(1);
             String title=cursor.getString(2);
             String server_id=cursor.getString(3);
+            String album_code=cursor.getString(4);
 
-            album= new AlbumList(url,title,server_id);
+            album= new AlbumList(url,title,server_id,album_code);
 
             cursor.moveToNext();
         }
