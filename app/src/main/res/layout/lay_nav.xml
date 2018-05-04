@@ -7,15 +7,25 @@
 
     <ImageView
         android:id="@+id/nav_logo"
-        app:srcCompat="@drawable/logo"
+        app:srcCompat="@drawable/rs_cafe"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        android:layout_height="150dp" />
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:background="@color/grey_900"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_below="@id/nav_logo"
+    android:id="@+id/horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"/>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_margin="20dp"
         android:gravity="center_horizontal"
-        android:layout_below="@id/nav_logo"
+        android:layout_below="@id/horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
