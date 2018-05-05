@@ -198,11 +198,11 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
     public int getItemCount() {
         if(photos.size()==0)
         {
-            NavigationActivity.mLinearLeft.setVisibility(View.GONE);
+            NavigationActivity.mEmptyCard.setVisibility(View.VISIBLE);
         }
         else{
-            NavigationActivity.mLinearLeft.setVisibility(View.VISIBLE);
-           // NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
+            NavigationActivity.mEmptyCard.setVisibility(View.INVISIBLE);
+            // NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
         }
         return photos.size();
     }

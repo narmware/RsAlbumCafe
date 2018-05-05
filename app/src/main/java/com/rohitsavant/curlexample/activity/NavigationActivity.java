@@ -11,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
@@ -73,12 +74,13 @@ public class NavigationActivity extends AppCompatActivity
     @BindView(R.id.btn_about) Button mBtnAbout;
     @BindView(R.id.btn_contact) Button mBtnContact;
     @BindView(R.id.btn_home) Button mBtnHome;
+   EditText mEdtAlbumId;
     @BindView(R.id.slider) protected SliderLayout mSlider;
     @BindView(R.id.fab_add) protected FloatingActionButton mFabAdd;
     Dialog dialogBuilder;
 
              DrawerLayout drawer;
-    public static LinearLayout mLinearLeft;
+    public static CardView mEmptyCard;
     AlbumListAdapter mAdapter;
     RequestQueue mVolleyRequest;
     ArrayList<AlbumList> mAlbumList=new ArrayList<>();
@@ -90,7 +92,8 @@ public class NavigationActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
-        mLinearLeft=findViewById(R.id.linear_left);
+        mEmptyCard=findViewById(R.id.empty_card);
+
         drawer= (DrawerLayout) findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -155,32 +158,8 @@ public class NavigationActivity extends AppCompatActivity
         mFabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialogBuilder = new Dialog(NavigationActivity.this);
-                dialogBuilder.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                dialogBuilder.setContentView(R.layout.lay_dialog_album);
-                dialogBuilder.setCancelable(false);
-                dialogBuilder.show();
 
-               /* Button exit = dialogBuilder.findViewById(R.id.dialog_no_connec_exit);
-                Button tryAgain = dialogBuilder.findViewById(R.id.dialog_no_connec_try_again);
-
-                exit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final AppCompatActivity act = (AppCompatActivity) mContext;
-                        act.finish();
-                    }
-                });
-
-                tryAgain.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        new SendAlbumFrame().execute();
-                        mNoConnectionDialog.dismiss();
-                    }
-                });*/
-
+                showAlbumDialog();
             }
         });
     }
@@ -207,6 +186,71 @@ public class NavigationActivity extends AppCompatActivity
             Log.e("Local db data",albumLists.get(i).getTitle());
             mAlbumList.add(album);
         }
+}
+
+public void showAlbumDialog()
+{
+    dialogBuilder = new Dialog(NavigationActivity.this);
+    dialogBuilder.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+    dialogBuilder.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //style id
+    dialogBuilder.setContentView(R.layout.lay_dialog_album);
+    dialogBuilder.setCancelable(false);
+    dialogBuilder.show();
+
+    mEdtAlbumId=dialogBuilder.findViewById(R.id.edt_Aid);
+    final Button mBtnSubmit = dialogBuilder.findViewById(R.id.btn_submit);
+    final Button mBtnCancel = dialogBuilder.findViewById(R.id.btn_cancel);
+
+    mEdtAlbumId.addTextChangedListener(new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+        }
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+        }
+        @Override
+        public void afterTextChanged(Editable arg0) {
+            String s=arg0.toString();
+            if(!s.equals(s.toUpperCase()))
+            {
+                s=s.toUpperCase();
+                mEdtAlbumId.setText(s);
+                mEdtAlbumId.setSelection(s.length());
+            }
+        }
+    });
+
+
+    mBtnSubmit.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            int validFlag=0;
+
+            mAlbumId=mEdtAlbumId.getText().toString().trim();
+
+            if(mAlbumId==null)
+            {
+                mEdtAlbumId.setError("Please enter album id");
+                validFlag=1;
+            }
+            if(validFlag==0) {
+                GetPhotoBook();
+            }
+        }
+    });
+
+    mBtnCancel.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            dialogBuilder.dismiss();
+        }
+    });
+
+
 }
              private void setSlider() {
                  // HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
@@ -373,10 +417,10 @@ public class NavigationActivity extends AppCompatActivity
                                         Toast.makeText(NavigationActivity.this, "This album alredy exist", Toast.LENGTH_SHORT).show();
                                     }
                                     else {
+                                        dialogBuilder.dismiss();
                                         mAlbumList.add(item);
                                         Log.e("Featured img title", item.getTitle());
                                         databaseAccess.setAlbum(item.getServer_id(), item.getTitle(), item.getUrl(),item.getAlbum_code());
-                                        mLinearLeft.setVisibility(View.VISIBLE);
                                         mAdapter.notifyDataSetChanged();
                                         Toast.makeText(NavigationActivity.this, "Album added successfully", Toast.LENGTH_SHORT).show();
                                     }
@@ -393,6 +437,7 @@ public class NavigationActivity extends AppCompatActivity
 
                             e.printStackTrace();
                             //Toast.makeText(NavigationActivity.this, "Invalid album id", Toast.LENGTH_SHORT).show();
+                            mEdtAlbumId.setError("Enter valid album id");
                             dialog.dismiss();
                         }
                         dialog.dismiss();
