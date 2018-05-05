@@ -11,13 +11,14 @@
     tools:context="com.rohitsavant.curlexample.activity.NavigationActivity"
     tools:showIn="@layout/app_bar_navigation">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/menu_btn"
         android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:elevation="10dp"
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
     <ImageButton
         android:id="@+id/btn_nav"
         android:foreground="?attr/selectableItemBackground"
@@ -28,13 +29,25 @@
 
         <ImageButton
             android:id="@+id/btn_delete"
+            android:layout_below="@id/btn_nav"
             android:foreground="?attr/selectableItemBackground"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/ic_delete"
             android:layout_width="50dp"
             android:layout_height="50dp" />
 
-    </LinearLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="@color/red_500"
+            app:fabSize="auto"
+            android:elevation="5dp"
+            app:srcCompat="@drawable/ic_add"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
     <LinearLayout
         android:background="@drawable/back"
@@ -54,7 +67,7 @@
 
         <LinearLayout
             android:id="@+id/linear_left"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -70,105 +83,28 @@
 
     <RelativeLayout
         android:id="@+id/linear_right"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ScrollView android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            xmlns:android="http://schemas.android.com/apk/res/android">
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/img_logo"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_launcher"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
 
-
-        <android.support.v7.widget.CardView
-            android:layout_margin="10dp"
-            app:cardCornerRadius="8dp"
-            app:cardUseCompatPadding="true"
-            android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:background="@color/grey_800"
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/slider"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            <EditText
-                android:id="@+id/edt_alb_id"
-                android:inputType="text"
-                android:hint="Enter Album id"
-                android:padding="10dp"
-                android:textColor="@color/textColor"
-                android:background="@drawable/edit_album"
-                android:imeOptions="flagNoExtractUi"
-                android:gravity="center"
-                android:singleLine="true"
-                android:fitsSystemWindows="true"
-                android:windowSoftInputMode="adjustResize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 />
 
-            <Button
-                android:id="@+id/btn_submit"
-                android:text="Submit"
-                android:foreground="?attr/selectableItemBackground"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/button_submit"
-                android:textColor="@color/amber_700"
-                android:minHeight="1dp"
-                android:minWidth="1dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            </LinearLayout>
         </android.support.v7.widget.CardView>
 
-       <LinearLayout
-           android:orientation="vertical"
-           android:id="@+id/footer"
-           android:layout_alignParentBottom="true"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content">
-           <TextView
-               android:text="Sample Album Id : RS1"
-               android:textColor="@color/pink_300"
-               android:gravity="center"
-               android:textSize="18sp"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content" />
 
-        <!--   <TextView
-               android:text="Visit us on"
-               android:textColor="@android:color/white"
-               android:gravity="center"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content" />
-
-           <TextView
-               android:text="www.narmware.com"
-               android:textColor="@color/pink_300"
-               android:gravity="center"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content" />-->
-       </LinearLayout>
-        </RelativeLayout>
-
-        </ScrollView>
     </RelativeLayout>
 
 </LinearLayout>

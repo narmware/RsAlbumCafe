@@ -1,10 +1,12 @@
 package com.rohitsavant.curlexample.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,7 +19,9 @@ import android.support.v7.widget.SnapHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -33,6 +37,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.gitonway.lee.niftymodaldialogeffects.lib.effects.FadeIn;
 import com.google.gson.Gson;
 import com.rohitsavant.curlexample.MyApplication;
 import com.rohitsavant.curlexample.R;
@@ -57,14 +70,15 @@ public class NavigationActivity extends AppCompatActivity
     @BindView(R.id.recycler) RecyclerView mRecyclerView;
     @BindView(R.id.btn_nav) ImageButton mBtnNav;
     @BindView(R.id.btn_delete) ImageButton mBtnDelete;
-    @BindView(R.id.btn_submit) Button mBtnSubmit;
     @BindView(R.id.btn_about) Button mBtnAbout;
     @BindView(R.id.btn_contact) Button mBtnContact;
     @BindView(R.id.btn_home) Button mBtnHome;
-    @BindView(R.id.edt_alb_id) EditText mEdtAlbumId;
-    DrawerLayout drawer;
+    @BindView(R.id.slider) protected SliderLayout mSlider;
+    @BindView(R.id.fab_add) protected FloatingActionButton mFabAdd;
+    Dialog dialogBuilder;
+
+             DrawerLayout drawer;
     public static LinearLayout mLinearLeft;
-    public static RelativeLayout mLinearRight;
     AlbumListAdapter mAdapter;
     RequestQueue mVolleyRequest;
     ArrayList<AlbumList> mAlbumList=new ArrayList<>();
@@ -77,7 +91,6 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
         SharedPreferencesHelper.setDeleteFalg(false,NavigationActivity.this);
         mLinearLeft=findViewById(R.id.linear_left);
-        mLinearRight=findViewById(R.id.linear_right);
         drawer= (DrawerLayout) findViewById(R.id.drawer_layout);
         /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -113,46 +126,6 @@ public class NavigationActivity extends AppCompatActivity
             }
         });
 
-        mEdtAlbumId.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-
-            }
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                                          int arg3) {
-            }
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                String s=arg0.toString();
-                if(!s.equals(s.toUpperCase()))
-                {
-                    s=s.toUpperCase();
-                    mEdtAlbumId.setText(s);
-                    mEdtAlbumId.setSelection(s.length());
-                }
-            }
-        });
-        mBtnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAlbumId=mEdtAlbumId.getText().toString().trim();
-
-                if(mAlbumId.equals(""))
-                {
-                    mEdtAlbumId.setError("Please enter album id");
-                }
-                else {
-
-                    GetPhotoBook();
-                    mEdtAlbumId.setText(" ");
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
-        });
 
         mBtnHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,6 +151,38 @@ public class NavigationActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        mFabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogBuilder = new Dialog(NavigationActivity.this);
+                dialogBuilder.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialogBuilder.setContentView(R.layout.lay_dialog_album);
+                dialogBuilder.setCancelable(false);
+                dialogBuilder.show();
+
+               /* Button exit = dialogBuilder.findViewById(R.id.dialog_no_connec_exit);
+                Button tryAgain = dialogBuilder.findViewById(R.id.dialog_no_connec_try_again);
+
+                exit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final AppCompatActivity act = (AppCompatActivity) mContext;
+                        act.finish();
+                    }
+                });
+
+                tryAgain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        new SendAlbumFrame().execute();
+                        mNoConnectionDialog.dismiss();
+                    }
+                });*/
+
+            }
+        });
     }
 
     private void init() {
@@ -191,6 +196,7 @@ public class NavigationActivity extends AppCompatActivity
         //used to hide keyboard bydefault
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        setSlider();
         setAlbumAdapter(new LinearLayoutManager(NavigationActivity.this));
 
         ArrayList<AlbumList> albumLists=databaseAccess.getAllAlbums();
@@ -202,6 +208,39 @@ public class NavigationActivity extends AppCompatActivity
             mAlbumList.add(album);
         }
 }
+             private void setSlider() {
+                 // HashMap<String,Integer> file_maps = new HashMap<String, Integer>();
+                 HashMap<String,String> file_maps = new HashMap<String, String>();
+                 file_maps.put("Key","https://i.ytimg.com/vi/RUn5NE0RP5Y/maxresdefault.jpg");
+                 file_maps.put("key1","https://i.ytimg.com/vi/ipd6ZBnnQOo/maxresdefault.jpg");
+
+                 for(String name : file_maps.keySet()){
+                     //textSliderView displays image with text title
+                     //TextSliderView textSliderView = new TextSliderView(NavigationActivity.this);
+
+                     //DefaultSliderView displays only image
+                     DefaultSliderView textSliderView = new DefaultSliderView(NavigationActivity.this);
+                     // initialize a SliderLayout
+                     textSliderView
+                             .description(name)
+                             .image(file_maps.get(name))
+                             .setScaleType(BaseSliderView.ScaleType.Fit);
+
+                     //add your extra information
+                     textSliderView.bundle(new Bundle());
+                     textSliderView.getBundle()
+                             .putString("extra",name);
+
+                     mSlider.addSlider(textSliderView);
+                 }
+                 mSlider.setPresetTransformer(SliderLayout.Transformer.ZoomIn);
+                 //mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+                 //mSlider.setCustomIndicator(custom_indicator);
+                 mSlider.setCustomAnimation(new DescriptionAnimation());
+                 mSlider.setFitsSystemWindows(true);
+                 mSlider.setDuration(3000);
+
+             }
 
     public void setAlbumAdapter(RecyclerView.LayoutManager mLayoutManager){
         SnapHelper snapHelper = new LinearSnapHelper();
@@ -353,7 +392,6 @@ public class NavigationActivity extends AppCompatActivity
                         } catch (Exception e) {
 
                             e.printStackTrace();
-                            mEdtAlbumId.setError("Invalid album id");
                             //Toast.makeText(NavigationActivity.this, "Invalid album id", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }

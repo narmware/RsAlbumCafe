@@ -199,11 +199,10 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
         if(photos.size()==0)
         {
             NavigationActivity.mLinearLeft.setVisibility(View.GONE);
-            NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(1000, ViewGroup.LayoutParams.MATCH_PARENT));
         }
         else{
             NavigationActivity.mLinearLeft.setVisibility(View.VISIBLE);
-            NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
+           // NavigationActivity.mLinearRight.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,1.0f));
         }
         return photos.size();
     }
