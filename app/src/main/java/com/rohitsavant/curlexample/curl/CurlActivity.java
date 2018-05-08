@@ -169,8 +169,9 @@ public class CurlActivity extends Activity {
         {
             if(bitmapImages.size()< SharedPreferencesHelper.getAlbumImageCount(CurlActivity.this))
             {
+                databaseAccess.deleteAlbumImages(mAid);
                 GetAlbumImages();
-                Toast.makeText(this, "Toatal not match", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Total not match"+mAid, Toast.LENGTH_SHORT).show();
             }
             bit=new Bitmap[bitmapImages.size()];
             for(int b=0;b<bitmapImages.size();b++)
@@ -469,10 +470,10 @@ public MyProvider(){
             r.bottom = r.top + imageHeight + border + border;
 */
 
-            r.left +=4;
-            r.right += -4;
-            r.top += 4;
-            r.bottom += -4;
+            r.left +=0;
+            r.right += -0;
+            r.top += 0;
+            r.bottom += -0;
 
             Paint p = new Paint();
             p.setColor(getResources().getColor(R.color.photoBackground));

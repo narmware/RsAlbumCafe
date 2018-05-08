@@ -82,7 +82,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                 @Override
                 public void onClick(View view) {
                     final int position= (int) mLinearItem.getTag();
-                    //Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
                     new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Are you sure?")
                             .setContentText("Remove this album")
@@ -91,6 +91,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                                 @Override
                                 public void onClick(SweetAlertDialog sDialog) {
 
+                                    //Toast.makeText(mContext,mItem.getServer_id().toString(),Toast.LENGTH_SHORT).show();
                                     photos.remove(position);
                                     databaseAccess.deleteSingleAlbum(mItem.getServer_id().toString());
                                     notifyDataSetChanged();
