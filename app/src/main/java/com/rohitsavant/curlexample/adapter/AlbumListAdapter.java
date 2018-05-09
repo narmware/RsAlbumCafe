@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,7 @@ public class AlbumListAdapter extends RecyclerView.Adapter<AlbumListAdapter.MyVi
                 @Override
                 public void onClick(View view) {
                     final int position= (int) mLinearItem.getTag();
-                    Toast.makeText(mContext, mItem.getServer_id(), Toast.LENGTH_SHORT).show();
+                    Log.e("Server service id", mItem.getServer_id());
                     new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Are you sure?")
                             .setContentText("Remove this album")

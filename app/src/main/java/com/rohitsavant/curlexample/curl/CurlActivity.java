@@ -504,7 +504,7 @@ public MyProvider(){
             if (w > h) {
                 mCurlView.setViewMode(CurlView.SHOW_TWO_PAGES);
                // mCurlView.setMargins(.1f, .05f, .1f, .05f);
-                mCurlView.setMargins(0,.17f,0,.17f);
+                mCurlView.setMargins(0,.12f,0,.12f);
             } else {
                 mCurlView.setViewMode(CurlView.SHOW_ONE_PAGE);
                // mCurlView.setMargins(.1f, .1f, .1f, .1f);
